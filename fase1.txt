@@ -1,0 +1,172 @@
+### DOCUMENTO MAESTRO DE ARQUITECTURA — FASE 1 (MVP FINAL)
+
+**Proyecto:** *AgroPulse XAI* — Sistema de Apoyo a la Decisión (DSS) Geoespacial para Rotación de Cultivos Resiliente.
+
+**Región Piloto:** Condado de Story, Iowa, EE. UU. (US Corn Belt) — seleccionada por disponibilidad inmediata de historial agrícola a 30 m y mapas edáficos oficiales a escala de parcela, eliminando vacíos de datos en el entrenamiento.
+
+---
+
+### 1. Alcance Funcional del MVP (Fusión Optimizada)
+
+El sistema es una aplicación web interactiva que recibe el polígono de una parcela agrícola (AOI), su rotación actual y las prioridades del agricultor (pesos de 1 a 5 en: ahorro de agua, control de erosión, fijación de nitrógeno, rentabilidad e interrupción de plagas) para entregar:
+
+1. **Grilla Espacial Armonizada (30 m × 30 m):** Fusión de datos satelitales y edáficos de distintas resoluciones a una cuadrícula común.
+
+
+2. **Diagnóstico Histórico de Ventanas Críticas:** Detección de períodos de suelo desnudo/baldío, estrés hídrico-térmico y riesgo de heladas.
+
+
+3. **Comparador de 3 Estrategias de Rotación (horizonte 3–5 años)** basadas en 4 grupos funcionales de cultivos (leguminosas fijadoras de N, cultivos de cobertura, raíces profundas y tolerantes a sequía):
+
+
+* *Estrategia 1 (Línea Base):* Rotación actual del agricultor.
+
+
+* *Estrategia 2 (Conservación Hídrica y Edáfica):* Maximiza infiltración, materia orgánica y cobertura invernal.
+
+
+* *Estrategia 3 (Rentabilidad Resiliente):* Optimiza el equilibrio entre margen económico de mercado y salud del suelo.
+
+
+
+
+4. **Simulador Interactivo "What-If" en Tiempo Real:** Sliders para perturbar escenarios climáticos ($\Delta\text{Precipitación}$ de $-40\%$ a $+30\%$ y $\Delta\text{Temperatura}$ de $0^\circ\text{C}$ a $+4^\circ\text{C}$) recalculando al instante el mapa de vulnerabilidad.
+
+
+5. **Módulo de Explicabilidad (XAI) e Incertidumbre:** Justificación estadística de cada recomendación, intervalos de confianza (Bootstrap) y alertas explícitas donde el criterio local del agricultor es irremplazable (maquinaria, contratos comerciales, drenaje subsuperficial).
+
+
+
+---
+
+### 2. Stack Tecnológico de Datos (7 Fuentes Exactas sin Huecos)
+
+| ID | Dataset / Producto Exacto | Acceso | Res. Espacial / Temporal | Rol en el Pipeline |
+| --- | --- | --- | --- | --- |
+| **D1** | **USDA NASS Cropland Data Layer** (`USDA/NASS/CDL`)
+
+ | GEE | 30 m / Anual (2016–2025)
+
+ | Secuencia histórica de cultivos (línea base) y recurrencia de plagas.
+
+ |
+| **D2** | **USDA NRCS SSURGO** (`projects/earthengine-legacy/assets/...` o SDA API)
+
+ | GEE / REST | Parcela (~10–30 m) / Estático
+
+ | Textura, materia orgánica, capacidad de agua disponible (AWC) y erodabilidad ($K$).
+
+ |
+| **D3** | **NASA SRTM Digital Elevation** (`USGS/SRTMGL1_003`)
+
+ | GEE | 30 m / Estático
+
+ | Cálculo de pendiente ($\%$) y flujo de escorrentía para riesgo de erosión.
+
+ |
+| **D4** | **NASA HLS** (`NASA/HLS/HLSL30/v002` + `HLSS30/v002`) | GEE | 30 m / ~2–3 días | Cálculo de **NDVI** (vigor foliar) y **BSI** (*Bare Soil Index* para suelo desnudo).
+
+ |
+| **D5** | **NASA SMAP L4** (`NASA/SMAP/SPL4SMGP/007`)
+
+ | GEE | 9 km / 3 horas (diario)
+
+ | Humedad del suelo en zona radicular ($0–100\text{ cm}$) para anomalías de sequía.
+
+ |
+| **D6** | **NASA GPM IMERG Final** (`NASA/GPM_L3/IMERG_V07`)
+
+ | GEE | ~11 km / Diario
+
+ | Precipitación diaria, anomalías de lluvia y tormentas erosivas.
+
+ |
+| **D7** | **NASA POWER Agroclimatology**
+
+ | REST API | ~55 km / Diario
+
+ | $T_{\max}$, $T_{\min}$, radiación solar y $ET_0$ para estrés térmico y heladas.
+
+ |
+
+*(Complemento estático: Archivo `crops_catalog.json` con parámetros agronómicos de Iowa State Extension: coeficiente $K_c$, aporte de N [kg/ha], factor de cobertura $C$, grupo funcional y precio/rendimiento promedio).*
+
+---
+
+### 3. Contrato de Arquitectura Modular (Para que cada IA programe sin conflictos)
+
+Todos los módulos de Python compartirán una estructura estándar basada en `pandas.DataFrame` / `numpy.ndarray` indexados por `pixel_id` (malla de 30 m) y `date` (resolución semanal/mensual):
+
+```text
+agropulse_xai/
+├── data/                  # Caché local (.parquet / .json) de la parcela piloto
+├── catalog/               # crops_catalog.json (reglas agronómicas y económicas)
+├── core/
+│   ├── extractor.py       # [Comp. Scientist] Descarga D1-D7 vía GEE/API
+│   ├── harmonizer.py      # [Matemático] Grilla común 30m + Optimizador multicriterio
+│   ├── phenology.py       # [Estadístico 1] Series de tiempo NDVI/BSI + Suelo desnudo
+│   ├── climate_water.py   # [Estadístico 2] Índices hídrico-térmicos + Sliders What-If
+│   ├── soil_agronomy.py   # [Estadístico 3] Erosión RUSLE + Balance N + Plagas
+│   └── xai_uncertainty.py # [Estadístico 4] Bootstrap + Propagación error + Textos XAI
+└── app.py                 # [Comp. Scientist] Interfaz Streamlit + Mapas Folium/Plotly
+
+```
+
+---
+
+### 4. Matriz de Ejecución por Integrante (Instrucción Directa para sus IAs)
+
+* **1. Científico de la Computación (`extractor.py` + `app.py`)**
+* **Input:** Coordenadas de una parcela en Story County, Iowa (ej. `[-93.62, 42.03]`).
+* **Tarea:** Extraer D1–D6 desde Google Earth Engine y D7 desde NASA POWER API, guardando un dataset limpio en `/data` para ejecución instantánea sin depender de internet en vivo. Construir la interfaz en Streamlit con mapa interactivo, selectores de prioridades y sliders climáticos.
+
+
+
+
+* **2. Matemático (`harmonizer.py`)**
+* **Input:** Capas raster a 30 m (D1–D4) y series gruesas de 9–55 km (D5–D7).
+* **Tarea:** Implementar interpolación bilineal / downscaling guiado por propiedades edáficas (AWC de SSURGO) para llevar SMAP/GPM/POWER a la grilla de 30 m. Formular el modelo de optimización multicriterio (TOPSIS ponderado) que selecciona las mejores secuencias de rotación según los pesos del agricultor.
+
+
+
+
+* **3. Estadístico 1 — Series de Tiempo (`phenology.py`)**
+* **Input:** Serie temporal cada 3 días de reflectancia HLS (D4) y cultivos históricos (D1).
+
+
+* **Tarea:** Calcular NDVI y BSI, aplicar suavizado Savitzky-Golay / descomposición STL y detectar automáticamente las ventanas críticas (fechas exactas donde $\text{BSI} > \text{umbral}$ indica suelo desnudo vulnerable).
+
+
+
+
+* **4. Estadístico 2 — Hidrología y Simulador (`climate_water.py`)**
+* **Input:** Series diarias armonizadas de SMAP (D5), GPM (D6) y NASA POWER (D7).
+
+
+* **Tarea:** Calcular el *Índice Compuesto de Estrés Hídrico-Térmico* (cruce anomalía SMAP + anomalía $T_{\max}$), anomalía de precipitación y balance hídrico ($P - ET_c$). Programar la función `simulate_what_if(delta_rain_pct, delta_temp_c)` que recalcula el riesgo ante escenarios extremos.
+
+
+
+
+* **5. Estadístico 3 — Agronomía y Suelo (`soil_agronomy.py`)**
+* **Input:** Atributos SSURGO (D2), pendiente SRTM (D3), erosividad GPM (D6) y `crops_catalog.json`.
+
+
+* **Tarea:** Implementar la ecuación de pérdida de suelo RUSLE ($A = R \cdot K \cdot LS \cdot C \cdot P$), el balance neto de nitrógeno por rotación y las penalizaciones por repetición de familia botánica (ciclos de plagas).
+
+
+
+
+* **6. Estadístico 4 — Incertidumbre y XAI (`xai_uncertainty.py`)**
+* **Input:** Salidas numéricas de los módulos 2, 3, 4 y 5.
+* **Tarea:** Cuantificar la incertidumbre espacial y temporal (especialmente la varianza introducida al bajar SMAP de 9 km a 30 m) mediante remuestreo Bootstrap, generando intervalos de confianza al 95% para cada estrategia y reglas lógicas que redactan explicaciones claras y alertas de validación humana para el agricultor.
+
+
+
+
+
+---
+
+**Instrucción de uso para tu equipo:** Cada integrante debe copiar este documento completo en su IA junto con el mensaje: *"Soy el [Rol asignado]. Revisa la arquitectura de AgroPulse XAI y espera las fórmulas de la Fase 2 para programar mi archivo `[nombre_archivo.py]`."*
+
+Cuando tu equipo tenga esto cargado, avísame y pasamos a la **FASE 2 (Fórmulas matemáticas y estadísticas exactas de cada módulo)**.

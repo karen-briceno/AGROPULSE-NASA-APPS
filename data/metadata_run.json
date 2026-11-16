@@ -1,0 +1,28 @@
+{
+  "fecha_extraccion_utc": "2026-11-14T16:00:53.131661",
+  "parcela_centro": {
+    "lon": -93.515,
+    "lat": 42.083
+  },
+  "bbox": [
+    -93.518,
+    42.08,
+    -93.512,
+    42.086
+  ],
+  "total_pixeles_agricolas_30m": 360,
+  "distribucion_cdl_2025": {
+    "1": 0.911,
+    "5": 0.089
+  },
+  "semilla_rng": 42,
+  "datasets": [
+    "USDA/NASS/CDL (2016-2025)",
+    "USDA NRCS SSURGO SDA REST",
+    "USGS/SRTMGL1_003",
+    "NASA/HLS/HLSL30+HLSS30 v002",
+    "NASA/SMAP/SPL4SMGP/008 (con respaldo NASA POWER GWETROOT)",
+    "NASA/GPM_L3/IMERG_V07 (con respaldo NASA POWER PRECTOTCORR)",
+    "NASA POWER Agroclimatology (1981-2025)"
+  ]
+}

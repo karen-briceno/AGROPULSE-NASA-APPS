@@ -1,0 +1,130 @@
+{
+ "corrida_utc": "2026-11-15T01:49:40.638756+00:00",
+ "entradas_mtime": {
+  "climate_long_1981_2025.parquet": "2026-11-14T16:02:42",
+  "hls_series_2016_2025.parquet": "2026-11-14T16:02:42",
+  "aligned_2016_2025.parquet": "2026-11-14T16:02:42",
+  "D2_ssurgo_soil.parquet": "2026-11-14T20:45:14",
+  "grid_30m.parquet": "2026-11-14T21:13:24"
+ },
+ "clases_hidro": {
+  "0.186|0": {
+   "awc": 0.18650000000000003,
+   "pendiente_media_deg": 0.55,
+   "cn_ref": 74.9,
+   "n_px": 301
+  },
+  "0.186|1": {
+   "awc": 0.18650000000000005,
+   "pendiente_media_deg": 1.28,
+   "cn_ref": 76.1,
+   "n_px": 53
+  },
+  "0.186|2": {
+   "awc": 0.1865,
+   "pendiente_media_deg": 2.34,
+   "cn_ref": 77.4,
+   "n_px": 6
+  }
+ },
+ "params": {
+  "k_et0": 0.937,
+  "zr_ref": 1.0,
+  "p_ref": 0.7,
+  "cn_ref": 78,
+  "p_scale": 1.0,
+  "cwhi_w": [
+   0.4,
+   0.3,
+   0.3
+  ],
+  "cri_w": [
+   0.4,
+   0.2,
+   0.2,
+   0.2
+  ],
+  "heat_c": 32.0,
+  "hardfrost_c": -2.2,
+  "erosive_mm": 12.7,
+  "slope_edges": [
+   1,
+   2,
+   3,
+   4,
+   6,
+   8
+  ],
+  "cover_cn_bonus": -4.0,
+  "cover_awc_bonus": 1.08,
+  "sigma_smap_m3m3": 0.04
+ },
+ "imerg_sobre_power_baseline": 1.204,
+ "et0_aligned_sobre_long": 1.0,
+ "validacion_externa": {
+  "imerg_sobre_power_ratio": 1.204,
+  "et0_aligned_sobre_long": 1.0,
+  "spearman_bucket_vs_smap": 0.88,
+  "sigma_input_rain_pct": 7.31,
+  "sigma_input_temp_c": 1.2,
+  "sigma_smap_m3m3": 0.04,
+  "rango_historico_lluvia_pct": [
+   -27.2,
+   27.3
+  ],
+  "rango_historico_temp_c": [
+   -1.91,
+   2.17
+  ]
+ },
+ "anios_clima": [
+  2016,
+  2025
+ ],
+ "anios_clima_largo": [
+  1981,
+  2025
+ ],
+ "rotaciones": {
+  "rot_actual": [
+   "corn",
+   "soybean",
+   "corn",
+   "soybean"
+  ],
+  "rot_conservacion": [
+   "corn",
+   "cereal_rye",
+   "soybean",
+   "cereal_rye"
+  ],
+  "rot_rentabilidad": [
+   "corn",
+   "soybean",
+   "oats",
+   "soybean"
+  ]
+ },
+ "rotaciones_fuente": "/content/drive/MyDrive/agropulse_xai/data/rotations.json",
+ "parametros_cultivo_fuente": {
+  "corn": "defecto",
+  "soybean": "defecto",
+  "alfalfa": "defecto",
+  "winter_wheat": "defecto",
+  "cereal_rye": "defecto",
+  "sorghum": "defecto",
+  "oats": "defecto",
+  "other_hay": "defecto",
+  "fallow": "defecto"
+ },
+ "n_pixeles": 360,
+ "n_grupos_awc": 3,
+ "supuestos": [
+  "clima puntual (una celda IMERG/POWER) difundido a todos los pixeles: la variacion espacial viene de pendiente (CN Williams 1995) y suelo",
+  "CN ajustado por pendiente (Williams 1995), HSG=B por defecto",
+  "sin riego ni drenaje subsuperficial ni ascenso capilar",
+  "metricas de ingreso (estres, perdida, riesgo) promedian solo cultivos comerciales (ky>0) e incorporan el efecto fisico de infiltracion/retencion del residuo de cobertura",
+  "ventanas de rotacion solapadas (n_eff << n) con interseccion comun para comparacion pareada",
+  "serie larga 1981-2025: P POWER reescalada por IMERG/POWER, ET0 x k_et0"
+ ]
+}

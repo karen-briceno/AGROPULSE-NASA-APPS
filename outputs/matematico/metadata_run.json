@@ -1,0 +1,55 @@
+{
+    "timestamp_utc": "2026-11-14T21:15:34.166039+00:00",
+    "seed": 42,
+    "certeza_maxima_fase_1": "MEDIA",
+    "tarjeta_xai_divulgacion": "SMAP 9 km -> 30 m solo redistribuye por AWC. No hay información sub-celda sobre riego, drenaje ni microtopografía.",
+    "brechas_declaradas": [
+        "gamma=0.5, la regla potencial AWC->humedad y el piso sigma_sm_comun=0.04 m3/m3 son supuestos estructurales.",
+        "Pendiente validación externa contra estaciones in situ en Iowa (cuenca Walnut Creek / redes SMAPVEX) para obtener RMSE empírico."
+    ],
+    "parametros_fisicos": {
+        "gamma_nominal": 0.5,
+        "gamma_sensibilidad": [
+            0.3,
+            0.5,
+            0.7
+        ],
+        "sigma_sm_comun_m3m3": 0.04,
+        "fraccion_recortada_global": 0.0,
+        "n_dias_smap": 3653,
+        "z_coarse_power_m": 310.22,
+        "gamma_lapse_k_per_m": 0.0065,
+        "rango_correccion_termica_c": [
+            0.008304908447265802,
+            0.0434090344238283
+        ],
+        "umbral_estres_termico_c": 32.0,
+        "sigma_tmax_c": 1.5,
+        "unidad_precipitacion": "mm/dia (acumulado anual medio reportado en grilla)",
+        "n_eff_espacial_asumido": 12.0,
+        "std_humedad_agregada_parcela_m3m3": 0.04026755745727268
+    },
+    "integridad_entradas": {
+        "grid_30m_sha256": "a4e5c9ce1cd9e3fb7f22e099eb7c489fb9b6c14b37a4d752ee7b8cdabfd5e2dd",
+        "aligned_2016_2025_sha256": "2479ab019c8d5b6f4840fb6d46dedd9500a9eb3c9d55daaab1354441ed382769",
+        "n_pixeles": 360,
+        "columnas_cultivo_verificadas": [
+            "crop_2016",
+            "crop_2017",
+            "crop_2018",
+            "crop_2019",
+            "crop_2020",
+            "crop_2021",
+            "crop_2022",
+            "crop_2023",
+            "crop_2024",
+            "crop_2025"
+        ]
+    },
+    "versiones_librerias": {
+        "numpy": "2.4.6",
+        "pandas": "2.2.3",
+        "pyarrow": "23.0.1"
+    },
+    "topsis_mc": null
+}

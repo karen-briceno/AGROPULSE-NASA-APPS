@@ -1,0 +1,31 @@
+{
+  "rotations": [
+    {
+      "rotation_id": "rot_actual",
+      "sequence": [
+        "corn",
+        "soybean",
+        "corn",
+        "soybean"
+      ]
+    },
+    {
+      "rotation_id": "rot_conservacion",
+      "sequence": [
+        "corn",
+        "cereal_rye",
+        "soybean",
+        "cereal_rye"
+      ]
+    },
+    {
+      "rotation_id": "rot_rentabilidad",
+      "sequence": [
+        "corn",
+        "soybean",
+        "oats",
+        "soybean"
+      ]
+    }
+  ]
+}

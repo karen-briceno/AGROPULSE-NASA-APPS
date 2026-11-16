@@ -1,0 +1,255 @@
+{
+  "Estrategia_1_Base": {
+    "estrategia": "Línea base (Rotación bienal Maíz - Soya) [DEMO]",
+    "resumen_agricultor": [
+      "Línea base (Rotación bienal Maíz - Soya) [DEMO]: puntaje 49.52 (rango probable 44.46 a 54.5); confianza MEDIA.",
+      "Lo que más limita la confianza: las cifras de esta estrategia son provisionales; el error de escala satelital aún no está calibrado.",
+      "Qué debe confirmar usted: Maquinaria y ventanas de labor para establecer la rotación. Drenaje subterráneo (tile drainage), compactación y manchas del lote que el satélite no ve."
+    ],
+    "puntaje_medio": 49.52,
+    "ic_95_inf": 44.46,
+    "ic_95_sup": 54.5,
+    "certeza": "MEDIA",
+    "evidencia_satelital": [
+      "HLS (30 m): entre 3.13 meses/año con suelo espectralmente expuesto (regla NDVI/BSI/NDTI) y 6.0 meses/año como cota que incluye los meses sin observación válida; sin verdad terreno no se confirma si es suelo desnudo o rastrojo.",
+      "Evidencia satelital observada (Estadístico 1 e1_v13): 4/4 fases observadas en HLS (método: observado_HLS_linea_base); suelo espectralmente expuesto = 3.13–6.0 meses/año en oct–may."
+    ],
+    "supuestos_y_escenarios": [],
+    "beneficios_agronomicos": [
+      "Sin costos de transición. Puntaje 49.52 (IC 95%: 44.46 a 54.5)."
+    ],
+    "riesgos_y_tradeoffs": [],
+    "brechas_e_incertidumbre": [
+      "DEMO: la serie de puntajes de esta estrategia es provisional (no proviene del motor de scoring).",
+      "NDTI (SWIR1/SWIR2) con AUC = 0.5144 entre residuo de maíz y de soya no discrimina rastrojo de suelo expuesto: la cifra de 'suelo expuesto' es espectral y puede sobrestimar el periodo sin cobertura en lotes con residuo; umbrales sin verdad terreno.",
+      "Brecha principal de observación HLS (oct-may, 8 meses): 5.0 meses/año observados y 2.0 meses/año (25.0% del periodo; 1.0 meses en invierno dic-feb) sin observaciones válidas. Rango causal en oct-may: 3.13 meses espectralmente confirmados bajo NDTI-Otsu, hasta 6.0 meses si todo el periodo sin dato estuviera desnudo (la nieve invernal aún no se clasifica como cubierta).",
+      "Regla espectral NDTI-Otsu sin verdad terreno: umbral=0.1086 con AUC=0.5144 entre residuo de maíz y soya a nivel temporada; define exposición espectral bajo NDTI y no ausencia física confirmada de rastrojo (transectos CTIC/NRCS o PlanetScope pendientes).",
+      "Erosividad R bajo pesos mensuales supuestos (sin fuente local calibrada; pendiente contraste con ISU Daily Erosion Project / RUSLE2 para Story County): 0.2933 a 0.42 como fracción de la erosividad R anual (máx. 0.61 en oct-jun, equivalente a ≈ 48.1% de la R de oct-jun).",
+      "Rotación histórica CDL (10 años) y tamaño muestral espacial efectivo (n_eff ≈ 3 campos): 97.78% de los píxeles muestra alternancia bienal estricta. Con n_eff ≈ 3 campos independientes, el IC 95% exacto de Clopper-Pearson para el error de secuencia es [0.0, 0.7076] (sensibilidad a nivel píxel: 0.0222 vs 0.401); esta baja muestra de campos limita cualquier IC espacial.",
+      "Pendiente para cierre final de incertidumbre multicriterio: series anuales reales (1981-2025) y draws CRN físicos de Estadístico 2, y RUSLE/agronomía real de Estadístico 3.",
+      "Topografía UTM y suelo SSURGO (30 m): pendiente media = 1.2% (mín=0.03%, P90=2.1%, máx=4.97%); AWC = 186.9 mm ([0.1263, 0.2148] m3/m3 = [126.3, 214.8] mm en 1 m).",
+      "Gaps invernales HLS (9 temporadas completas 2017-2025, 5 filtros E1 y MIN_PIX_DIA=100): mediana = 64 d, P90 = 88 d, máx = 92 d (5/9 >60 d).",
+      "SMAP 9 km -> 30 m solo redistribuye por AWC. No hay información sub-celda sobre riego, drenaje ni microtopografía.",
+      "Datos provisionales (no medidos, excluidos de la evidencia): deficit_hidrico_verano_mm.",
+      "Certeza: MEDIA (ancho IC95 = 10.04 pts; n = 42 años; σ aplicada = 1.57; año malo p10 = 44.07).",
+      "Los errores de escala usan un valor heurístico, aún sin calibrar con validación cruzada espacial: la certeza no puede superar MEDIA.",
+      "Autocorrelación temporal (ρ₁ = 0.683): n efectivo ≈ 7.9 años.",
+      "Escala: SMAP (9 km), IMERG (≈11 km) y POWER (≈55 km) fueron desagregados a 30 m; la variación de humedad dentro del lote no se resuelve.",
+      "Solo 32% de los píxeles-fecha HLS libres de nubes/nieve (promedio del período analizado).",
+      "Solo 19% de los píxeles-fecha HLS invernales (nov-mar) libres de nubes/nieve (promedio del período analizado).",
+      "La rotación histórica fue inferida por satélite (CDL; ~0% de prob. de al menos un año mal clasificado): requiere confirmación del agricultor.",
+      "Intercomparación entre productos (no es verdad terreno): GPM IMERG vs NASA POWER (semanal 2016-2025): RMSE = 10.74 mm/sem, sesgo = +3.14 mm/sem, r = 0.882.",
+      "Rendimientos y precios son promedios regionales (USDA NASS); no reflejan contratos ni costos locales."
+    ],
+    "validacion_humana_requerida": [
+      "Maquinaria y ventanas de labor para establecer la rotación.",
+      "Drenaje subterráneo (tile drainage), compactación y manchas del lote que el satélite no ve.",
+      "Comercialización: acopios y compradores cercanos para los cultivos propuestos.",
+      "Sus prioridades: confirmar o ajustar los pesos usados en la comparación."
+    ]
+  },
+  "Estrategia_2_Eco": {
+    "estrategia": "Conservación (Maíz + Centeno Cobertura - Soya) [DEMO]",
+    "resumen_agricultor": [
+      "Conservación (Maíz + Centeno Cobertura - Soya) [DEMO]: puntaje 77.97 (rango probable 73.37 a 82.19); confianza MEDIA.",
+      "Lo que más limita la confianza: las cifras de esta estrategia son provisionales; el error de escala satelital aún no está calibrado.",
+      "Qué debe confirmar usted: Maquinaria y ventanas de labor para establecer la rotación. Drenaje subterráneo (tile drainage), compactación y manchas del lote que el satélite no ve."
+    ],
+    "puntaje_medio": 77.97,
+    "ic_95_inf": 73.37,
+    "ic_95_sup": 82.19,
+    "certeza": "MEDIA",
+    "evidencia_satelital": [
+      "HLS (30 m): entre 3.13 meses/año con suelo espectralmente expuesto (regla NDVI/BSI/NDTI) y 6.0 meses/año como cota que incluye los meses sin observación válida; sin verdad terreno no se confirma si es suelo desnudo o rastrojo."
+    ],
+    "supuestos_y_escenarios": [
+      "Supuesto de escenario (Estadístico 1 e1_v13): Conservación se modela como línea base × (1 − e_cover supuesto), con 2/2 fases base observadas en HLS y factor relativo nominal = 0.6563 [0.5777, 0.7348] (sin validación directa de biomasa de centeno en campo).",
+      "Oportunidad de centeno de cobertura (supuesto de calendario operativo; N=9 temporadas): factibilidad térmica (GDD base 4 >= 150 post-siembra) en 7/9 temporadas (77.8%; 2/9 bloqueadas); mediana de ventana de siembra desde senescencia NDVI = 51.0 días/año (≤ 62 d) y duración potencial por calendario fijo (terminación 1 mayo) = 218.0 días/año (decisión operativa corresponde al agricultor)."
+    ],
+    "beneficios_agronomicos": [
+      "Reducción de erosión: [PROVISIONAL, pendiente del motor RUSLE] sin cifra.",
+      "Mejora de infiltración/retención; ahorro de agua [PROVISIONAL] sin cifra."
+    ],
+    "riesgos_y_tradeoffs": [
+      "La cobertura consume agua antes de la siembra: riesgo en primaveras secas.",
+      "Inmovilización de N con gramíneas (p. ej. centeno): ajustar fertilización.",
+      "Fecha de terminación y calentamiento del suelo pueden afectar la emergencia."
+    ],
+    "brechas_e_incertidumbre": [
+      "DEMO: la serie de puntajes de esta estrategia es provisional (no proviene del motor de scoring).",
+      "NDTI (SWIR1/SWIR2) con AUC = 0.5144 entre residuo de maíz y de soya no discrimina rastrojo de suelo expuesto: la cifra de 'suelo expuesto' es espectral y puede sobrestimar el periodo sin cobertura en lotes con residuo; umbrales sin verdad terreno.",
+      "Brecha principal de observación HLS (oct-may, 8 meses): 5.0 meses/año observados y 2.0 meses/año (25.0% del periodo; 1.0 meses en invierno dic-feb) sin observaciones válidas. Rango causal en oct-may: 3.13 meses espectralmente confirmados bajo NDTI-Otsu, hasta 6.0 meses si todo el periodo sin dato estuviera desnudo (la nieve invernal aún no se clasifica como cubierta).",
+      "Regla espectral NDTI-Otsu sin verdad terreno: umbral=0.1086 con AUC=0.5144 entre residuo de maíz y soya a nivel temporada; define exposición espectral bajo NDTI y no ausencia física confirmada de rastrojo (transectos CTIC/NRCS o PlanetScope pendientes).",
+      "Erosividad R bajo pesos mensuales supuestos (sin fuente local calibrada; pendiente contraste con ISU Daily Erosion Project / RUSLE2 para Story County): 0.2933 a 0.42 como fracción de la erosividad R anual (máx. 0.61 en oct-jun, equivalente a ≈ 48.1% de la R de oct-jun).",
+      "Rotación histórica CDL (10 años) y tamaño muestral espacial efectivo (n_eff ≈ 3 campos): 97.78% de los píxeles muestra alternancia bienal estricta. Con n_eff ≈ 3 campos independientes, el IC 95% exacto de Clopper-Pearson para el error de secuencia es [0.0, 0.7076] (sensibilidad a nivel píxel: 0.0222 vs 0.401); esta baja muestra de campos limita cualquier IC espacial.",
+      "Pendiente para cierre final de incertidumbre multicriterio: series anuales reales (1981-2025) y draws CRN físicos de Estadístico 2, y RUSLE/agronomía real de Estadístico 3.",
+      "Topografía UTM y suelo SSURGO (30 m): pendiente media = 1.2% (mín=0.03%, P90=2.1%, máx=4.97%); AWC = 186.9 mm ([0.1263, 0.2148] m3/m3 = [126.3, 214.8] mm en 1 m).",
+      "Gaps invernales HLS (9 temporadas completas 2017-2025, 5 filtros E1 y MIN_PIX_DIA=100): mediana = 64 d, P90 = 88 d, máx = 92 d (5/9 >60 d).",
+      "SMAP 9 km -> 30 m solo redistribuye por AWC. No hay información sub-celda sobre riego, drenaje ni microtopografía.",
+      "Datos provisionales (no medidos, excluidos de la evidencia): deficit_hidrico_verano_mm.",
+      "Certeza: MEDIA (ancho IC95 = 8.82 pts; n = 42 años; σ aplicada = 1.57; año malo p10 = 73.43).",
+      "Los errores de escala usan un valor heurístico, aún sin calibrar con validación cruzada espacial: la certeza no puede superar MEDIA.",
+      "Autocorrelación temporal (ρ₁ = 0.683): n efectivo ≈ 7.9 años.",
+      "Escala: SMAP (9 km), IMERG (≈11 km) y POWER (≈55 km) fueron desagregados a 30 m; la variación de humedad dentro del lote no se resuelve.",
+      "Solo 32% de los píxeles-fecha HLS libres de nubes/nieve (promedio del período analizado).",
+      "Solo 19% de los píxeles-fecha HLS invernales (nov-mar) libres de nubes/nieve (promedio del período analizado).",
+      "Intercomparación entre productos (no es verdad terreno): GPM IMERG vs NASA POWER (semanal 2016-2025): RMSE = 10.74 mm/sem, sesgo = +3.14 mm/sem, r = 0.882.",
+      "Puntajes simulados (contrafactual): el IC refleja variabilidad climática y error de escala; NO incluye incertidumbre estructural del modelo (Kc, C-RUSLE, rendimientos).",
+      "Rendimientos y precios son promedios regionales (USDA NASS); no reflejan contratos ni costos locales."
+    ],
+    "validacion_humana_requerida": [
+      "Maquinaria y ventanas de labor para establecer la rotación.",
+      "Drenaje subterráneo (tile drainage), compactación y manchas del lote que el satélite no ve.",
+      "Comercialización: acopios y compradores cercanos para los cultivos propuestos.",
+      "Sus prioridades: confirmar o ajustar los pesos usados en la comparación."
+    ]
+  },
+  "Estrategia_3_Rentable": {
+    "estrategia": "Rentabilidad Resiliente (Maíz - Soya - Avena - Soya) [DEMO]",
+    "resumen_agricultor": [
+      "Rentabilidad Resiliente (Maíz - Soya - Avena - Soya) [DEMO]: puntaje 71.99 (rango probable 67.23 a 76.43); confianza MEDIA.",
+      "Lo que más limita la confianza: las cifras de esta estrategia son provisionales; el error de escala satelital aún no está calibrado.",
+      "Qué debe confirmar usted: Maquinaria y ventanas de labor para establecer la rotación. Drenaje subterráneo (tile drainage), compactación y manchas del lote que el satélite no ve."
+    ],
+    "puntaje_medio": 71.99,
+    "ic_95_inf": 67.23,
+    "ic_95_sup": 76.43,
+    "certeza": "MEDIA",
+    "evidencia_satelital": [
+      "HLS (30 m): entre 3.13 meses/año con suelo espectralmente expuesto (regla NDVI/BSI/NDTI) y 6.0 meses/año como cota que incluye los meses sin observación válida; sin verdad terreno no se confirma si es suelo desnudo o rastrojo."
+    ],
+    "supuestos_y_escenarios": [
+      "Supuesto de escenario (Estadístico 1 e1_v13): 2/4 fases observadas en HLS + supuesto de exposición estival post-avena; factor relativo nominal = 0.908 [0.908, 0.908] (el intervalo contiene 1.0, por lo que su exposición no es estadísticamente distinguible de la línea base)."
+    ],
+    "beneficios_agronomicos": [
+      "Leguminosas fijadoras de N y ruptura de ciclos de plagas.",
+      "Ahorro de agua [PROVISIONAL] sin cifra."
+    ],
+    "riesgos_y_tradeoffs": [
+      "Riesgo de mercado/logística de leguminosas; verificar compradores locales.",
+      "Ventana de siembra y cosecha distinta: validar maquinaria disponible."
+    ],
+    "brechas_e_incertidumbre": [
+      "DEMO: la serie de puntajes de esta estrategia es provisional (no proviene del motor de scoring).",
+      "NDTI (SWIR1/SWIR2) con AUC = 0.5144 entre residuo de maíz y de soya no discrimina rastrojo de suelo expuesto: la cifra de 'suelo expuesto' es espectral y puede sobrestimar el periodo sin cobertura en lotes con residuo; umbrales sin verdad terreno.",
+      "Brecha principal de observación HLS (oct-may, 8 meses): 5.0 meses/año observados y 2.0 meses/año (25.0% del periodo; 1.0 meses en invierno dic-feb) sin observaciones válidas. Rango causal en oct-may: 3.13 meses espectralmente confirmados bajo NDTI-Otsu, hasta 6.0 meses si todo el periodo sin dato estuviera desnudo (la nieve invernal aún no se clasifica como cubierta).",
+      "Regla espectral NDTI-Otsu sin verdad terreno: umbral=0.1086 con AUC=0.5144 entre residuo de maíz y soya a nivel temporada; define exposición espectral bajo NDTI y no ausencia física confirmada de rastrojo (transectos CTIC/NRCS o PlanetScope pendientes).",
+      "Erosividad R bajo pesos mensuales supuestos (sin fuente local calibrada; pendiente contraste con ISU Daily Erosion Project / RUSLE2 para Story County): 0.2933 a 0.42 como fracción de la erosividad R anual (máx. 0.61 en oct-jun, equivalente a ≈ 48.1% de la R de oct-jun).",
+      "Rotación histórica CDL (10 años) y tamaño muestral espacial efectivo (n_eff ≈ 3 campos): 97.78% de los píxeles muestra alternancia bienal estricta. Con n_eff ≈ 3 campos independientes, el IC 95% exacto de Clopper-Pearson para el error de secuencia es [0.0, 0.7076] (sensibilidad a nivel píxel: 0.0222 vs 0.401); esta baja muestra de campos limita cualquier IC espacial.",
+      "Pendiente para cierre final de incertidumbre multicriterio: series anuales reales (1981-2025) y draws CRN físicos de Estadístico 2, y RUSLE/agronomía real de Estadístico 3.",
+      "Topografía UTM y suelo SSURGO (30 m): pendiente media = 1.2% (mín=0.03%, P90=2.1%, máx=4.97%); AWC = 186.9 mm ([0.1263, 0.2148] m3/m3 = [126.3, 214.8] mm en 1 m).",
+      "Gaps invernales HLS (9 temporadas completas 2017-2025, 5 filtros E1 y MIN_PIX_DIA=100): mediana = 64 d, P90 = 88 d, máx = 92 d (5/9 >60 d).",
+      "SMAP 9 km -> 30 m solo redistribuye por AWC. No hay información sub-celda sobre riego, drenaje ni microtopografía.",
+      "Datos provisionales (no medidos, excluidos de la evidencia): deficit_hidrico_verano_mm.",
+      "Certeza: MEDIA (ancho IC95 = 9.2 pts; n = 42 años; σ aplicada = 1.57; año malo p10 = 67.19).",
+      "Los errores de escala usan un valor heurístico, aún sin calibrar con validación cruzada espacial: la certeza no puede superar MEDIA.",
+      "Autocorrelación temporal (ρ₁ = 0.683): n efectivo ≈ 7.9 años.",
+      "Escala: SMAP (9 km), IMERG (≈11 km) y POWER (≈55 km) fueron desagregados a 30 m; la variación de humedad dentro del lote no se resuelve.",
+      "Solo 32% de los píxeles-fecha HLS libres de nubes/nieve (promedio del período analizado).",
+      "Solo 19% de los píxeles-fecha HLS invernales (nov-mar) libres de nubes/nieve (promedio del período analizado).",
+      "Intercomparación entre productos (no es verdad terreno): GPM IMERG vs NASA POWER (semanal 2016-2025): RMSE = 10.74 mm/sem, sesgo = +3.14 mm/sem, r = 0.882.",
+      "Puntajes simulados (contrafactual): el IC refleja variabilidad climática y error de escala; NO incluye incertidumbre estructural del modelo (Kc, C-RUSLE, rendimientos).",
+      "Rendimientos y precios son promedios regionales (USDA NASS); no reflejan contratos ni costos locales."
+    ],
+    "validacion_humana_requerida": [
+      "Maquinaria y ventanas de labor para establecer la rotación.",
+      "Drenaje subterráneo (tile drainage), compactación y manchas del lote que el satélite no ve.",
+      "Comercialización: acopios y compradores cercanos para los cultivos propuestos.",
+      "Sus prioridades: confirmar o ajustar los pesos usados en la comparación."
+    ]
+  },
+  "_comparacion": {
+    "delta_vs_base": {
+      "Estrategia_2_Eco": {
+        "mediana": 28.47,
+        "ic_95": [
+          24.03,
+          32.78
+        ],
+        "p_mayor_que_base": 1.0
+      },
+      "Estrategia_3_Rentable": {
+        "mediana": 22.5,
+        "ic_95": [
+          18.0,
+          26.82
+        ],
+        "p_mayor_que_base": 1.0
+      }
+    },
+    "p_mejor": {
+      "Estrategia_1_Base": 0.0,
+      "Estrategia_2_Eco": 0.996,
+      "Estrategia_3_Rentable": 0.004
+    },
+    "n_anios_comunes": 42
+  },
+  "_run_metadata": {
+    "modulo": "Estadistico 4 — Incertidumbre y Explicabilidad XAI",
+    "xai_uncertainty_version": "v2.7",
+    "xai_uncertainty_sha256": "e2bfaf325a3c1b6de09bf77385ede7c50168720902b11d1f933e5d0a4ce6eaa1",
+    "e1_schema_version": "e1_v13",
+    "e2_audit_status": {
+      "coherente": false,
+      "n_draws": 100,
+      "medias_draws_mm": [
+        135.08,
+        67.27,
+        113.56
+      ],
+      "medias_tabla_mm": [
+        75.76,
+        35.95,
+        65.8
+      ],
+      "avisos": [
+        "rot_actual: media de draws = 135.1 vs serie = 75.8 (dif. 78%)",
+        "rot_conservacion: media de draws = 67.3 vs serie = 35.9 (dif. 87%)",
+        "rot_rentabilidad: media de draws = 113.6 vs serie = 65.8 (dif. 73%)",
+        "Δ rot_actual-rot_conservacion: draws = 67.8 vs serie = 39.8: definiciones/periodos distintos",
+        "Δ rot_actual-rot_rentabilidad: draws = 21.5 vs serie = 10.0: definiciones/periodos distintos"
+      ]
+    },
+    "e3_audit_status": {
+      "estado": "PROVISIONAL_PENDIENTE_RUSLE_REAL",
+      "archivos_en_drive": [
+        "Copia de crops_catalog_crudo.json",
+        "rotations.json",
+        "soil_agronomy.py",
+        "soil_agronomy_annual_1981_2025.gsheet",
+        "soil_agronomy_quantiles.json"
+      ],
+      "avisos_validador": []
+    },
+    "cdl_empirico": {
+      "f_alternancia_perfecta_px": 0.9778,
+      "p_error_px": 0.0222,
+      "n_campos_efectivos": 3,
+      "clopper_pearson_95_campos": [
+        0.0,
+        0.7076
+      ],
+      "anios_cdl": 10
+    },
+    "timestamp_utc": "2026-11-15T17:42:37.570703+00:00",
+    "seed": 42,
+    "python": "3.13.18",
+    "numpy": "2.4.6",
+    "pandas": "2.2.3",
+    "inputs_sha256": {
+      "core_xai_uncertainty": "e2bfaf325a3c1b6de09bf77385ede7c50168720902b11d1f933e5d0a4ce6eaa1",
+      "math_grid_30m": "dfab22c235b24732ce4a03e27661900016d7640602cd535289e0506cacec81de",
+      "math_metadata": "c561c7bb75bfedf115e75ca07ea098f183fa10f9399eeb5aefa00cea8117bf44",
+      "est1_validation": "83f616c0a89004067eaa08e50c4c57a811ddaa935d39e6ce09524361d872c3ae",
+      "est1_metrics_pheno": "1ab6044c421c58df1f2b4ef621c41acbe4a7d6bfc233d55a6aa05e299a2dc456",
+      "est1_bare_windows": "285b52608c77d320aec7bd59bbf49717f35d8ce8735cd0f81b7a62fa6aa2be47",
+      "est2_long_metrics": "5504d5a9b49464f77edc0566d38ce10baab8983aa162604efb4c63ef8013ccad",
+      "est2_summary": "8f00e5eb990c11b05eeb524394053911e13760f93960571abda2c7610884335a",
+      "est2_draws_npz": "90433dd1109ccb33f9fa7251d379dd037b2b85a02acb645082e7822b5c413afc",
+      "verif_soil": "75bf3cb0345c8f17d70497c72675363dc6220db4fc547a1efa27a4a272b157ec",
+      "verif_hls": "c1094bd76af691e9255b8eec45673b7824c2cebd77afb5817abf8d9339326b94",
+      "verif_aligned": "2479ab019c8d5b6f4840fb6d46dedd9500a9eb3c9d55daaab1354441ed382769",
+      "verif_climate_long": "d30e18a5c6837c22abcf2a6a5fd646ae63798a339e82085fd9dbbf2dcb4db7de"
+    }
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "Estrategia_1_Base": {
+    "estrategia": "Línea base (rotación actual; pendiente de confirmar) [DEMO]",
+    "puntaje_medio": 49.45,
+    "ic_95_inf": 39.62,
+    "ic_95_sup": 59.4,
+    "certeza": "BAJA",
+    "evidencia_satelital": [
+      "HLS (30 m): entre 0.3 (excluyendo residuo con SWIR2) y 4.9 meses/año (solo NDVI/BSI) con baja cobertura vegetal; sin verdad terreno no se separa suelo expuesto de rastrojo."
+    ],
+    "beneficios_agronomicos": [
+      "Sin costos de transición. Puntaje 49.45 (IC 95%: 39.62 a 59.4)."
+    ],
+    "riesgos_y_tradeoffs": [],
+    "brechas_e_incertidumbre": [
+      "DEMO: la serie de puntajes de esta estrategia es provisional (no proviene del motor de scoring).",
+      "Detector NDVI/BSI sin SWIR2 (no separa rastrojo de suelo desnudo): puede sobrestimar el periodo sin cobertura en lotes con residuo; umbrales sin calibrar con verdad terreno.",
+      "Suelo SSURGO (0-100 cm): Clarion con AWC = 186.9 mm (85% área; ssurgo_awc constante en los 360 píxeles y sin límites awc_l/awc_h).",
+      "Incertidumbre de residuo y nubes en HLS (fmask bits 0-4 == 0 + NDSI <= 0.20): intervalo observado 0.3–4.9 meses/año (NDTI invierno = 0.113; rango sensibilidad malla NDVI×BSI = 0.5–6.6 meses); si meses invernales sin dato (<2 obs) se cuentan como desnudos, la cota superior sube a 6.4 meses/año. Si gran parte es rastrojo de maíz, el beneficio del centeno puede estar sobreestimado.",
+      "Cobertura temporal invierno (nov-mar): gap máximo intra-temporada = 136 días (mediana 11 fechas válidas/temporada); sin interp_flag explícita.",
+      "Pendiente: confirmar unidades de sigma_downscaling_score del Matemático, cruzar crop_2016..2025 por pixel_id para resolver discrepancia CDL 2025 (91.1% Maíz) vs rot_actual (Maíz-Soya), y reemplazar series DEMO con ≥25 años de Estadísticos 2 y 3.",
+      "Datos provisionales (no medidos, excluidos de la evidencia): deficit_hidrico_verano_mm, repeticion_cultivo_anios.",
+      "Certeza: BAJA (ancho IC95 = 19.78 pts; n = 7 años; σ aplicada = 4.67; año malo p10 = 42.28).",
+      "Los errores de escala usan un valor heurístico, aún sin calibrar con validación cruzada espacial: la certeza se limita a MEDIA.",
+      "Escala: SMAP (9 km), IMERG (≈11 km) y POWER (≈55 km) fueron desagregados a 30 m; la variación de humedad dentro del lote no se resuelve.",
+      "Solo 43% de los píxeles-fecha HLS libres de nubes/nieve (promedio del período analizado).",
+      "Solo 33% de los píxeles-fecha HLS invernales (nov-mar) libres de nubes/nieve (promedio del período analizado).",
+      "La rotación histórica fue inferida por satélite (CDL; ~30% de prob. de al menos un año mal clasificado): requiere confirmación del agricultor.",
+      "Intercomparación entre productos (no es verdad terreno): GPM IMERG vs NASA POWER (semanal 2016-2025): RMSE = 10.74 mm/sem, sesgo = +3.14 mm/sem (~+164 mm/año, supera σ_escala actual sin verdad terreno CoCoRaHS/IEM), r = 0.882.",
+      "Rendimientos y precios son promedios regionales (USDA NASS); no reflejan contratos ni costos locales."
+    ],
+    "validacion_humana_requerida": [
+      "Maquinaria y ventanas de labor para establecer la rotación.",
+      "Drenaje subterráneo (tile drainage), compactación y manchas del lote que el satélite no ve.",
+      "Comercialización: acopios y compradores cercanos para los cultivos propuestos.",
+      "Sus prioridades: confirmar o ajustar los pesos usados en la comparación."
+    ]
+  },
+  "Estrategia_2_Eco": {
+    "estrategia": "Conservación (Maíz + Centeno Cobertura - Soya) [DEMO]",
+    "puntaje_medio": 77.97,
+    "ic_95_inf": 70.42,
+    "ic_95_sup": 84.18,
+    "certeza": "BAJA",
+    "evidencia_satelital": [
+      "HLS (30 m): entre 0.3 (excluyendo residuo con SWIR2) y 4.9 meses/año (solo NDVI/BSI) con baja cobertura vegetal; sin verdad terreno no se separa suelo expuesto de rastrojo."
+    ],
+    "beneficios_agronomicos": [
+      "Reducción de erosión estimada: 43.42% (IC 95%: 36.56% a 50.19%).",
+      "Mejora de infiltración/retención; ahorro de agua 18.63% (IC 95%: 11.87% a 25.3%)."
+    ],
+    "riesgos_y_tradeoffs": [
+      "La cobertura consume agua antes de la siembra: riesgo en primaveras secas.",
+      "Inmovilización de N con gramíneas (p. ej. centeno): ajustar fertilización.",
+      "Fecha de terminación y calentamiento del suelo pueden afectar la emergencia."
+    ],
+    "brechas_e_incertidumbre": [
+      "DEMO: la serie de puntajes de esta estrategia es provisional (no proviene del motor de scoring).",
+      "Detector NDVI/BSI sin SWIR2 (no separa rastrojo de suelo desnudo): puede sobrestimar el periodo sin cobertura en lotes con residuo; umbrales sin calibrar con verdad terreno.",
+      "Suelo SSURGO (0-100 cm): Clarion con AWC = 186.9 mm (85% área; ssurgo_awc constante en los 360 píxeles y sin límites awc_l/awc_h).",
+      "Incertidumbre de residuo y nubes en HLS (fmask bits 0-4 == 0 + NDSI <= 0.20): intervalo observado 0.3–4.9 meses/año (NDTI invierno = 0.113; rango sensibilidad malla NDVI×BSI = 0.5–6.6 meses); si meses invernales sin dato (<2 obs) se cuentan como desnudos, la cota superior sube a 6.4 meses/año. Si gran parte es rastrojo de maíz, el beneficio del centeno puede estar sobreestimado.",
+      "Cobertura temporal invierno (nov-mar): gap máximo intra-temporada = 136 días (mediana 11 fechas válidas/temporada); sin interp_flag explícita.",
+      "Pendiente: confirmar unidades de sigma_downscaling_score del Matemático, cruzar crop_2016..2025 por pixel_id para resolver discrepancia CDL 2025 (91.1% Maíz) vs rot_actual (Maíz-Soya), y reemplazar series DEMO con ≥25 años de Estadísticos 2 y 3.",
+      "Datos provisionales (no medidos, excluidos de la evidencia): deficit_hidrico_verano_mm, repeticion_cultivo_anios.",
+      "Certeza: BAJA (ancho IC95 = 13.76 pts; n = 7 años; σ aplicada = 3.39; año malo p10 = 72.17).",
+      "Los errores de escala usan un valor heurístico, aún sin calibrar con validación cruzada espacial: la certeza se limita a MEDIA.",
+      "Escala: SMAP (9 km), IMERG (≈11 km) y POWER (≈55 km) fueron desagregados a 30 m; la variación de humedad dentro del lote no se resuelve.",
+      "Solo 43% de los píxeles-fecha HLS libres de nubes/nieve (promedio del período analizado).",
+      "Solo 33% de los píxeles-fecha HLS invernales (nov-mar) libres de nubes/nieve (promedio del período analizado).",
+      "Intercomparación entre productos (no es verdad terreno): GPM IMERG vs NASA POWER (semanal 2016-2025): RMSE = 10.74 mm/sem, sesgo = +3.14 mm/sem (~+164 mm/año, supera σ_escala actual sin verdad terreno CoCoRaHS/IEM), r = 0.882.",
+      "Puntajes simulados (contrafactual): el IC refleja variabilidad climática y error de escala.",
+      "Rendimientos y precios son promedios regionales (USDA NASS); no reflejan contratos ni costos locales."
+    ],
+    "validacion_humana_requerida": [
+      "Maquinaria y ventanas de labor para establecer la rotación.",
+      "Drenaje subterráneo (tile drainage), compactación y manchas del lote que el satélite no ve.",
+      "Comercialización: acopios y compradores cercanos para los cultivos propuestos.",
+      "Sus prioridades: confirmar o ajustar los pesos usados en la comparación."
+    ]
+  },
+  "Estrategia_3_Rentable": {
+    "estrategia": "Rentabilidad Resiliente (Maíz - Soya - Avena) [DEMO]",
+    "puntaje_medio": 72.0,
+    "ic_95_inf": 63.75,
+    "ic_95_sup": 79.16,
+    "certeza": "BAJA",
+    "evidencia_satelital": [
+      "HLS (30 m): entre 0.3 (excluyendo residuo con SWIR2) y 4.9 meses/año (solo NDVI/BSI) con baja cobertura vegetal; sin verdad terreno no se separa suelo expuesto de rastrojo."
+    ],
+    "beneficios_agronomicos": [
+      "Leguminosas fijadoras de N y ruptura de ciclos de plagas.",
+      "Ahorro de agua 12.18% (IC 95%: 4.49% a 19.7%)."
+    ],
+    "riesgos_y_tradeoffs": [
+      "Riesgo de mercado/logística de leguminosas; verificar compradores locales.",
+      "Ventana de siembra y cosecha distinta: validar maquinaria disponible."
+    ],
+    "brechas_e_incertidumbre": [
+      "DEMO: la serie de puntajes de esta estrategia es provisional (no proviene del motor de scoring).",
+      "Detector NDVI/BSI sin SWIR2 (no separa rastrojo de suelo desnudo): puede sobrestimar el periodo sin cobertura en lotes con residuo; umbrales sin calibrar con verdad terreno.",
+      "Suelo SSURGO (0-100 cm): Clarion con AWC = 186.9 mm (85% área; ssurgo_awc constante en los 360 píxeles y sin límites awc_l/awc_h).",
+      "Incertidumbre de residuo y nubes en HLS (fmask bits 0-4 == 0 + NDSI <= 0.20): intervalo observado 0.3–4.9 meses/año (NDTI invierno = 0.113; rango sensibilidad malla NDVI×BSI = 0.5–6.6 meses); si meses invernales sin dato (<2 obs) se cuentan como desnudos, la cota superior sube a 6.4 meses/año. Si gran parte es rastrojo de maíz, el beneficio del centeno puede estar sobreestimado.",
+      "Cobertura temporal invierno (nov-mar): gap máximo intra-temporada = 136 días (mediana 11 fechas válidas/temporada); sin interp_flag explícita.",
+      "Pendiente: confirmar unidades de sigma_downscaling_score del Matemático, cruzar crop_2016..2025 por pixel_id para resolver discrepancia CDL 2025 (91.1% Maíz) vs rot_actual (Maíz-Soya), y reemplazar series DEMO con ≥25 años de Estadísticos 2 y 3.",
+      "Datos provisionales (no medidos, excluidos de la evidencia): deficit_hidrico_verano_mm, repeticion_cultivo_anios.",
+      "Certeza: BAJA (ancho IC95 = 15.42 pts; n = 7 años; σ aplicada = 3.84; año malo p10 = 65.82).",
+      "Los errores de escala usan un valor heurístico, aún sin calibrar con validación cruzada espacial: la certeza se limita a MEDIA.",
+      "Escala: SMAP (9 km), IMERG (≈11 km) y POWER (≈55 km) fueron desagregados a 30 m; la variación de humedad dentro del lote no se resuelve.",
+      "Solo 43% de los píxeles-fecha HLS libres de nubes/nieve (promedio del período analizado).",
+      "Solo 33% de los píxeles-fecha HLS invernales (nov-mar) libres de nubes/nieve (promedio del período analizado).",
+      "Intercomparación entre productos (no es verdad terreno): GPM IMERG vs NASA POWER (semanal 2016-2025): RMSE = 10.74 mm/sem, sesgo = +3.14 mm/sem (~+164 mm/año, supera σ_escala actual sin verdad terreno CoCoRaHS/IEM), r = 0.882.",
+      "Puntajes simulados (contrafactual): el IC refleja variabilidad climática y error de escala.",
+      "Rendimientos y precios son promedios regionales (USDA NASS); no reflejan contratos ni costos locales."
+    ],
+    "validacion_humana_requerida": [
+      "Maquinaria y ventanas de labor para establecer la rotación.",
+      "Drenaje subterráneo (tile drainage), compactación y manchas del lote que el satélite no ve.",
+      "Comercialización: acopios y compradores cercanos para los cultivos propuestos.",
+      "Sus prioridades: confirmar o ajustar los pesos usados en la comparación."
+    ]
+  },
+  "_comparacion": {
+    "delta_vs_base": {
+      "Estrategia_2_Eco": {
+        "mediana": 28.63,
+        "ic_95": [
+          16.87,
+          39.88
+        ],
+        "p_mayor_que_base": 1.0
+      },
+      "Estrategia_3_Rentable": {
+        "mediana": 22.57,
+        "ic_95": [
+          10.28,
+          34.61
+        ],
+        "p_mayor_que_base": 1.0
+      }
+    },
+    "p_mejor": {
+      "Estrategia_1_Base": 0.0,
+      "Estrategia_2_Eco": 0.88,
+      "Estrategia_3_Rentable": 0.12
+    },
+    "n_anios_comunes": 7
+  }
+}

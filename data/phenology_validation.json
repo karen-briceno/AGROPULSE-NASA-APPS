@@ -1,0 +1,20 @@
+{
+  "method": "Spectral Classifier (NDVI + BSI + NDTI + NDSI Snow Mask) vs Agronomic Reference",
+  "grid_source_used": "harmonized_grid_30m.parquet",
+  "grid_pixels_count": 1200,
+  "calendar_years_aligned": "2016-2025 (10 years)",
+  "frac_hls_valida_parcel": 0.4394,
+  "snow_contaminated_obs_masked": 76449,
+  "confusion_matrix": {
+    "TP": 85,
+    "TN": 326,
+    "FP": 81,
+    "FN": 15
+  },
+  "metrics": {
+    "accuracy": 0.8107,
+    "precision": 0.512,
+    "recall": 0.85,
+    "f1_score": 0.6391
+  }
+}

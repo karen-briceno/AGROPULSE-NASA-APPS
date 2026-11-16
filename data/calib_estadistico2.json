@@ -1,0 +1,13 @@
+{
+ "awc_cm_cm": 0.18650000000000005,
+ "k_et0": 0.937,
+ "imerg_sobre_power": 1.204,
+ "p_anual_imerg_mm": 969,
+ "p_anual_power_mm": 805,
+ "r_semanal": 0.883,
+ "nan_smap_pct": 0.0,
+ "zr_ref_m": 1.0,
+ "p_dep_ref": 0.7,
+ "spearman": 0.828,
+ "lag_dias": 0
+}

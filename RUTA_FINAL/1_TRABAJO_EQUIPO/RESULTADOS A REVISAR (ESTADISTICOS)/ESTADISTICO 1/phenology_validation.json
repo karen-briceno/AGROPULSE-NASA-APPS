@@ -1,0 +1,514 @@
+{
+  "module": "Estadistico 1 — Fenologia y Suelo Desnudo (v15)",
+  "schema_version": "e1_v15",
+  "run_metadata": {
+    "timestamp_utc": "2026-11-15T19:31:11.564725+00:00",
+    "seed": 42,
+    "python": "3.13.18",
+    "numpy": "2.4.6",
+    "pandas": "2.2.3",
+    "inputs_sha256": {
+      "harmonized_grid_30m.parquet": "dfab22c235b24732ce4a03e27661900016d7640602cd535289e0506cacec81de",
+      "hls_series_2016_2025.parquet": "c1094bd76af691e9255b8eec45673b7824c2cebd77afb5817abf8d9339326b94",
+      "climate_long_1981_2025.parquet": "d30e18a5c6837c22abcf2a6a5fd646ae63798a339e82085fd9dbbf2dcb4db7de",
+      "rotations.json": "71671d6e1474d7cdfcaa6840f658780618753c83cd178aec3b047f89363f0a90",
+      "crops_catalog.json": "d03e510afed0f904bf99279b9e8f6f33a7e585760127916f7fd2a722483cde6e"
+    },
+    "outputs_sha256": {
+      "metrics_phenology.parquet": "45469bdf665180f00f0a865529db32f19f78bfdcc46a2e60be145918d5cb1172",
+      "metrics_phenology_by_season.parquet": "74d1604e35484b3e523e8e4875d54a6c62e5aded256ab693ef96cd9c2ec427d4",
+      "phenology_weekly.parquet": "dfe97cfb5f78f5b11ddb70c400b5804c753891fcbc27652c553ed6d7a94dacb9",
+      "bare_soil_windows.parquet": "5df200f55881d157f3e1b29f5272e725310f1e976cfd7324b32c1534a19508a8",
+      "phenology_climate_45yr_1981_2025.parquet": "d474db5c1a8148dfa928146eb53441fffc24dde1d7a3f4219b8645df74807f35"
+    },
+    "metadata_matematico_grid_30m_sha256_entrada": "a4e5c9ce1cd9e3fb7f22e099eb7c489fb9b6c14b37a4d752ee7b8cdabfd5e2dd",
+    "metadata_matematico_harmonized_grid_sha256_salida": null,
+    "base_rotation_id": "rot_actual",
+    "parametros": {
+      "MIN_OBS_MES": 2,
+      "MIN_MESES_OBS_TEMP": 3,
+      "NDSI_MAX": 0.4,
+      "SNOW_MONTH_FRAC_MIN": 0.5,
+      "NDVI_BARE": 0.3,
+      "BSI_BARE": 0.05,
+      "NDVI_LOWCANOPY": 0.38,
+      "BSI_LOWCANOPY": 0.02,
+      "NDTI_FALLBACK": 0.113,
+      "OTSU_ASHMAN_D_MIN": 2.0,
+      "OTSU_MIN_N": 500,
+      "SIG_BSI": [
+        0.05,
+        0.04
+      ],
+      "SIG_NDVI": [
+        0.32,
+        0.05
+      ],
+      "SIG_NDTI": 0.03,
+      "SPRING_NDVI": [
+        0.35,
+        0.04
+      ],
+      "MIN_SPRING_OBS": 2,
+      "MAX_GAP_SEMANAS": 3,
+      "MIN_DIAS_VENTANA": 14,
+      "RYE_PLANT_START": [
+        9,
+        15
+      ],
+      "RYE_PLANT_END": [
+        11,
+        15
+      ],
+      "RYE_TERM_END": [
+        5,
+        1
+      ],
+      "RYE_MIN_GDD_ESTABLISH": 150.0,
+      "RYE_COVER_EFF_RANGE": [
+        0.35,
+        0.45,
+        0.55
+      ],
+      "OATS_SUMMER_EXPOSURE_RANGE": [
+        0.0,
+        1.5,
+        3.0
+      ],
+      "OATS_C_FALLBACK": 0.16,
+      "OATS_C_REL_UNCERT": 0.5,
+      "R_PRECIP_BETA": 1.6,
+      "W_VULN": [
+        0.7,
+        0.3
+      ],
+      "SCHEMA_VERSION": "e1_v15",
+      "MIN_PIX_DIA": 180,
+      "USAR_FILTRO_AEROSOL": true,
+      "WIN_MESES": [
+        9,
+        10,
+        11,
+        12,
+        1,
+        2,
+        3,
+        4
+      ],
+      "MIN_PATRONES_TRANSICION": 2,
+      "N_BOOT": 1000
+    }
+  },
+  "parcel_summary": {
+    "grid_pixels_count": 360,
+    "pixeles_con_hls": 351,
+    "pixeles_sin_hls": [
+      "px_0000",
+      "px_0001",
+      "px_0002",
+      "px_0003",
+      "px_0004",
+      "px_0005",
+      "px_0006",
+      "px_0007",
+      "px_0008"
+    ],
+    "pixel_temporadas_validas_N": 2746,
+    "min_pix_dia": 180,
+    "erosivity_oct_jun_fraccion_anual": 0.62,
+    "pesos_mensuales_R_desde_precip_liquida": {
+      "1": 0.003,
+      "2": 0.0083,
+      "3": 0.0472,
+      "4": 0.1045,
+      "5": 0.1409,
+      "6": 0.1706,
+      "7": 0.1431,
+      "8": 0.1397,
+      "9": 0.0973,
+      "10": 0.0844,
+      "11": 0.0456,
+      "12": 0.0155
+    },
+    "hls_filter_audit": {
+      "total_obs_360px": 452666,
+      "pasa_fmask_nube_sombra_nieve": 0.4311,
+      "pasa_fmask_no_agua": 0.9691,
+      "pasa_fmask_no_aerosol_alto": 0.4772,
+      "pasa_rango_reflectancia_0_1": 0.9324,
+      "pasa_ndsi_le_040": 0.8833,
+      "frac_final_valida": 0.3189,
+      "frac_final_con_filtro_aerosol": 0.3189,
+      "frac_final_sin_filtro_aerosol": 0.413,
+      "filtro_aerosol_activo": true
+    },
+    "ndti": {
+      "n_candidatos": 71004,
+      "mediana_invernal_ndti": 0.0985,
+      "umbral_otsu": 0.1086,
+      "eta_bimodalidad": 0.704,
+      "ashman_d": 3.124,
+      "umbral_ashman_d_min": 2.0,
+      "bimodalidad_confirmada": true,
+      "umbral_otsu_loyo_min": 0.1041,
+      "umbral_otsu_loyo_max": 0.115,
+      "umbral_usado": 0.1086,
+      "fuente": "otsu_validado_ashman",
+      "diagnostico_auc_intra_anio_antifase_mediana": 0.5921,
+      "n_anios_con_antifase_evaluados": 10,
+      "limitacion_declarada": "Sin verdad terreno invernal (transectos CTIC/NRCS) la regla define 'suelo espectralmente expuesto bajo NDTI', no ausencia confirmada de rastrojo."
+    },
+    "bare_months_spectral_low_ndti_mediana": 3.11,
+    "bare_months_obs_max_mediana": 4.75,
+    "snow_covered_months_oct_may_mediana": 2.0,
+    "unknown_months_oct_may_mediana": 1.0,
+    "bare_months_max_bound_mediana": 5.94,
+    "intervalo_union_sensibilidad_meses": [
+      2.91,
+      6.0
+    ],
+    "sensibilidad_filtro_aerosol_completa": {
+      "con_filtro": {
+        "bare_months_min_mediana": 3.11,
+        "bare_months_max_bound_mediana": 5.94,
+        "unknown_months_mediana": 1.0,
+        "mar_central_mediana": 3.79
+      },
+      "sin_filtro": {
+        "bare_months_min_mediana": 2.95,
+        "bare_months_max_bound_mediana": 6.0,
+        "unknown_months_mediana": 0.0,
+        "mar_central_mediana": 3.25
+      }
+    },
+    "sensibilidad_conjunta_ndvi_bsi_ndti": [
+      {
+        "escenario_umbral": "restrictivo",
+        "ndvi_bare": 0.28,
+        "bsi_bare": 0.06,
+        "ndti_thresh": 0.1041,
+        "filtro_aerosol": true,
+        "bare_months_min_mediana": 2.91,
+        "bare_months_max_bound_mediana": 5.94,
+        "unknown_months_mediana": 1.0,
+        "mar_central_mediana": 3.47
+      },
+      {
+        "escenario_umbral": "nominal",
+        "ndvi_bare": 0.3,
+        "bsi_bare": 0.05,
+        "ndti_thresh": 0.1086,
+        "filtro_aerosol": true,
+        "bare_months_min_mediana": 3.11,
+        "bare_months_max_bound_mediana": 5.94,
+        "unknown_months_mediana": 1.0,
+        "mar_central_mediana": 3.79
+      },
+      {
+        "escenario_umbral": "laxo",
+        "ndvi_bare": 0.33,
+        "bsi_bare": 0.04,
+        "ndti_thresh": 0.115,
+        "filtro_aerosol": true,
+        "bare_months_min_mediana": 3.26,
+        "bare_months_max_bound_mediana": 5.94,
+        "unknown_months_mediana": 1.0,
+        "mar_central_mediana": 4.15
+      },
+      {
+        "escenario_umbral": "nominal_con_filtro_aerosol_invertido",
+        "ndvi_bare": 0.3,
+        "bsi_bare": 0.05,
+        "ndti_thresh": 0.1086,
+        "filtro_aerosol": false,
+        "bare_months_min_mediana": 2.95,
+        "bare_months_max_bound_mediana": 6.0,
+        "unknown_months_mediana": 0.0,
+        "mar_central_mediana": 3.25
+      }
+    ],
+    "rye_temporadas_factibles_de_9": 7,
+    "rye_prob_factibilidad_N9": 0.7778,
+    "rye_prob_factibilidad_CP95": [
+      0.3999,
+      0.9719
+    ],
+    "rye_ventana_siembra_estadisticos": {
+      "ventana_siembra_dias_mediana_inicio_observado": 52.5,
+      "n_temporadas_inicio_observado": 4,
+      "ventana_siembra_dias_rango_inicio_interpolado": [
+        0.0,
+        59.0
+      ],
+      "n_temporadas_inicio_interpolado": 5
+    },
+    "erosivity_weighted_bare_min_mediana": 0.3039,
+    "variabilidad_interanual_parcela_N9": {
+      "bare_min": {
+        "mediana_9_temp": 3.22,
+        "min_anual": 1.0,
+        "max_anual": 4.38
+      },
+      "bare_obs_max": {
+        "mediana_9_temp": 4.79,
+        "min_anual": 3.0,
+        "max_anual": 7.0
+      },
+      "snow_covered_seas": {
+        "mediana_9_temp": 2.0,
+        "min_anual": 0.0,
+        "max_anual": 3.0
+      },
+      "unknown_bare_seas": {
+        "mediana_9_temp": 1.0,
+        "min_anual": 0.0,
+        "max_anual": 3.0
+      },
+      "unknown_winter": {
+        "mediana_9_temp": 0.5,
+        "min_anual": 0.0,
+        "max_anual": 2.0
+      },
+      "bare_max_bound": {
+        "mediana_9_temp": 5.88,
+        "min_anual": 4.75,
+        "max_anual": 8.0
+      }
+    },
+    "estimacion_central_MAR_meses": {
+      "central_mediana_meses": 3.79,
+      "IC95_bootstrap_temporadas": [
+        2.97,
+        5.21
+      ]
+    },
+    "c_ref_usado_en_escenarios": 0.31
+  },
+  "evaluacion_estrategias_rotacion": {
+    "rot_actual": {
+      "sequence": [
+        "corn",
+        "soybean",
+        "corn",
+        "soybean"
+      ],
+      "metodo": "observado_HLS_linea_base",
+      "fases_base_observadas_hls": "4/4",
+      "frac_fases_con_cobertura": 0.0,
+      "factor_relativo_nominal": 1.0,
+      "rango_factor_relativo": [
+        1.0,
+        1.0
+      ],
+      "erosivity_weighted_bare_min_mediana": 0.2942,
+      "erosivity_rango_escenario": [
+        0.2942,
+        0.2942
+      ]
+    },
+    "rot_conservacion": {
+      "sequence": [
+        "corn",
+        "cereal_rye",
+        "soybean",
+        "cereal_rye"
+      ],
+      "metodo": "escenario_cobertura_invernal_Kaspar2001_CP95 (frac_fases=1.00, P_fact=0.78 [0.40,0.97])",
+      "fases_base_observadas_hls": "2/2",
+      "frac_fases_con_cobertura": 1.0,
+      "factor_relativo_nominal": 0.65,
+      "rango_factor_relativo": [
+        0.4655,
+        0.86
+      ],
+      "erosivity_weighted_bare_min_mediana": 0.2462,
+      "erosivity_rango_escenario": [
+        0.2214,
+        0.2749
+      ]
+    },
+    "rot_rentabilidad": {
+      "sequence": [
+        "corn",
+        "soybean",
+        "oats",
+        "soybean"
+      ],
+      "metodo": "escenario_avena_oct_may_mas_rango_estival (2/4 fases obs)",
+      "fases_base_observadas_hls": "2/4",
+      "frac_fases_con_cobertura": 0.0,
+      "factor_relativo_nominal": 0.9034,
+      "rango_factor_relativo": [
+        0.7703,
+        1.0365
+      ],
+      "erosivity_weighted_bare_min_mediana": 0.3283,
+      "erosivity_rango_escenario": [
+        0.2629,
+        0.3942
+      ]
+    }
+  },
+  "interfaz_E4": {
+    "schema_version": "e1_v15",
+    "base_rotation_id": "rot_actual",
+    "columnas_contrato_metrics_phenology": [
+      "pixel_id",
+      "rotation_id",
+      "metodo",
+      "fases_observadas_hls",
+      "es_observado",
+      "hls_disponible",
+      "frac_hls_valida",
+      "bare_months_min",
+      "bare_months_obs_max",
+      "bare_months_max_bound",
+      "bare_months_interval_low",
+      "bare_months_interval_high",
+      "bare_months_min_yr_min",
+      "bare_months_min_yr_max",
+      "unknown_months_oct_may",
+      "unknown_months_dic_feb",
+      "factor_vs_observado",
+      "factor_vs_observado_min",
+      "factor_vs_observado_max",
+      "bare_spectral_score",
+      "spring_green_index",
+      "erosivity_oct_abr_min",
+      "erosivity_may_jun_min",
+      "erosivity_jul_sep_min",
+      "erosivity_weighted_bare_min",
+      "erosivity_weighted_bare_obs",
+      "schema_version"
+    ],
+    "panel_interanual_file": "metrics_phenology_by_season.parquet"
+  },
+  "crop_stratification_por_cultivo_previo": {
+    "modelo_descriptivo_efectos_fijos_anio_patron": {
+      "efecto_soya_menos_maiz_meses": 0.5816,
+      "n_patrones_rotacion": 3,
+      "n_pixeles_que_rompen_sincronia": 23,
+      "uso": "DESCRIPTIVO. Identificado con 2-3 campos."
+    },
+    "Post_Maiz (CDL 1 previo)": {
+      "n_pixel_temporadas": 1385,
+      "obs_hls_medias_por_temporada": 24.4,
+      "ndti_invernal_mean": 0.1146,
+      "bare_months_min_mediana": 3.11,
+      "bare_months_obs_max_mediana": 5.0
+    },
+    "Post_Soya (CDL 5 previo)": {
+      "n_pixel_temporadas": 1361,
+      "obs_hls_medias_por_temporada": 24.3,
+      "ndti_invernal_mean": 0.0991,
+      "bare_months_min_mediana": 2.92,
+      "bare_months_obs_max_mediana": 4.75
+    }
+  },
+  "temporadas_intercultivo": [
+    {
+      "ag_year": 2016,
+      "semanas": 30,
+      "dias_intercultivo_min": 49,
+      "dias_cubierto_nieve": 14,
+      "dias_sin_datos_nubes": 147,
+      "dias_intercultivo_cota_max": 196,
+      "dias_suelo_desnudo_ge50": 0
+    },
+    {
+      "ag_year": 2017,
+      "semanas": 31,
+      "dias_intercultivo_min": 98,
+      "dias_cubierto_nieve": 35,
+      "dias_sin_datos_nubes": 63,
+      "dias_intercultivo_cota_max": 161,
+      "dias_suelo_desnudo_ge50": 84
+    },
+    {
+      "ag_year": 2018,
+      "semanas": 31,
+      "dias_intercultivo_min": 91,
+      "dias_cubierto_nieve": 35,
+      "dias_sin_datos_nubes": 91,
+      "dias_intercultivo_cota_max": 182,
+      "dias_suelo_desnudo_ge50": 21
+    },
+    {
+      "ag_year": 2019,
+      "semanas": 30,
+      "dias_intercultivo_min": 112,
+      "dias_cubierto_nieve": 35,
+      "dias_sin_datos_nubes": 49,
+      "dias_intercultivo_cota_max": 161,
+      "dias_suelo_desnudo_ge50": 28
+    },
+    {
+      "ag_year": 2020,
+      "semanas": 30,
+      "dias_intercultivo_min": 140,
+      "dias_cubierto_nieve": 42,
+      "dias_sin_datos_nubes": 28,
+      "dias_intercultivo_cota_max": 168,
+      "dias_suelo_desnudo_ge50": 91
+    },
+    {
+      "ag_year": 2021,
+      "semanas": 30,
+      "dias_intercultivo_min": 168,
+      "dias_cubierto_nieve": 28,
+      "dias_sin_datos_nubes": 14,
+      "dias_intercultivo_cota_max": 182,
+      "dias_suelo_desnudo_ge50": 105
+    },
+    {
+      "ag_year": 2022,
+      "semanas": 30,
+      "dias_intercultivo_min": 105,
+      "dias_cubierto_nieve": 77,
+      "dias_sin_datos_nubes": 28,
+      "dias_intercultivo_cota_max": 133,
+      "dias_suelo_desnudo_ge50": 56
+    },
+    {
+      "ag_year": 2023,
+      "semanas": 31,
+      "dias_intercultivo_min": 196,
+      "dias_cubierto_nieve": 0,
+      "dias_sin_datos_nubes": 21,
+      "dias_intercultivo_cota_max": 217,
+      "dias_suelo_desnudo_ge50": 98
+    },
+    {
+      "ag_year": 2024,
+      "semanas": 30,
+      "dias_intercultivo_min": 175,
+      "dias_cubierto_nieve": 35,
+      "dias_sin_datos_nubes": 0,
+      "dias_intercultivo_cota_max": 175,
+      "dias_suelo_desnudo_ge50": 133
+    }
+  ],
+  "clima_45y_solo_clima": {
+    "n_anios": 45,
+    "gdd_media_1981_2015": 1673.1,
+    "gdd_media_2016_2025": 1829.1,
+    "percentil_gdd_2016_2025_min_max": [
+      0.511,
+      0.956
+    ],
+    "tendencia_gdd_kendall_tau": 0.349,
+    "tendencia_gdd_p": 0.0007
+  },
+  "validacion": {
+    "consistencia_interna_oct_may": {
+      "ventana_evaluada": "Octubre a Mayo, temporadas 2016/17-2024/25 (N=207)",
+      "TP": 115,
+      "TN": 83,
+      "FP": 4,
+      "FN": 5,
+      "kappa_consistencia_interna": 0.9109,
+      "advertencia": "Consistencia interna circular sobre los mismos índices; NO es exactitud contra verdad terreno."
+    },
+    "verdad_terreno": "PENDIENTE: requiere transectos de residuo (CTIC/NRCS) o imagen invernal etiquetada."
+  }
+}

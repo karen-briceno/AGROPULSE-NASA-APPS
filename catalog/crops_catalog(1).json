@@ -1,0 +1,78 @@
+{
+  "cdl_to_crop": {
+    "1": "corn",
+    "4": "sorghum",
+    "5": "soybean",
+    "24": "winter_wheat",
+    "27": "cereal_rye",
+    "28": "oats",
+    "36": "alfalfa",
+    "37": "other_hay",
+    "61": "fallow"
+  },
+  "crops": {
+    "corn": {
+      "name_es": "Maíz",
+      "functional_group": "cereal_cash",
+      "botanical_family": "Poaceae",
+      "kc_mid": 1.2,
+      "n_balance_kg_ha": -165.0,
+      "rusle_c_factor": 0.28,
+      "net_margin_usd_ha": 738.5
+    },
+    "soybean": {
+      "name_es": "Soja",
+      "functional_group": "legume_n_fixer",
+      "botanical_family": "Fabaceae",
+      "kc_mid": 1.15,
+      "n_balance_kg_ha": 45.0,
+      "rusle_c_factor": 0.34,
+      "net_margin_usd_ha": 591.2
+    },
+    "alfalfa": {
+      "name_es": "Alfalfa",
+      "functional_group": "deep_rooted",
+      "botanical_family": "Fabaceae",
+      "kc_mid": 1.2,
+      "n_balance_kg_ha": 110.0,
+      "rusle_c_factor": 0.02,
+      "net_margin_usd_ha": 857.5
+    },
+    "winter_wheat": {
+      "name_es": "Trigo invierno",
+      "functional_group": "cover_crop",
+      "botanical_family": "Poaceae",
+      "kc_mid": 1.15,
+      "n_balance_kg_ha": -85.0,
+      "rusle_c_factor": 0.08,
+      "net_margin_usd_ha": 167.0
+    },
+    "cereal_rye": {
+      "name_es": "Centeno cobertura",
+      "functional_group": "cover_crop",
+      "botanical_family": "Poaceae",
+      "kc_mid": 1.05,
+      "n_balance_kg_ha": 15.0,
+      "rusle_c_factor": 0.04,
+      "net_margin_usd_ha": -135.0
+    },
+    "sorghum": {
+      "name_es": "Sorgo",
+      "functional_group": "drought_tolerant",
+      "botanical_family": "Poaceae",
+      "kc_mid": 1.1,
+      "n_balance_kg_ha": -115.0,
+      "rusle_c_factor": 0.22,
+      "net_margin_usd_ha": 51.25
+    },
+    "fallow": {
+      "name_es": "Barbecho / Desnudo",
+      "functional_group": "fallow",
+      "botanical_family": "None",
+      "kc_mid": 0.2,
+      "n_balance_kg_ha": -15.0,
+      "rusle_c_factor": 0.85,
+      "net_margin_usd_ha": -60.0
+    }
+  }
+}

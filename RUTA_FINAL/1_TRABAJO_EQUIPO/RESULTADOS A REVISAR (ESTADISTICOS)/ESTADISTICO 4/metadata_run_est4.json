@@ -1,0 +1,68 @@
+{
+  "modulo": "Estadistico 4 — Incertidumbre y Explicabilidad XAI",
+  "xai_uncertainty_version": "v2.7",
+  "xai_uncertainty_sha256": "e2bfaf325a3c1b6de09bf77385ede7c50168720902b11d1f933e5d0a4ce6eaa1",
+  "e1_schema_version": "e1_v13",
+  "e2_audit_status": {
+    "coherente": false,
+    "n_draws": 100,
+    "medias_draws_mm": [
+      135.08,
+      67.27,
+      113.56
+    ],
+    "medias_tabla_mm": [
+      75.76,
+      35.95,
+      65.8
+    ],
+    "avisos": [
+      "rot_actual: media de draws = 135.1 vs serie = 75.8 (dif. 78%)",
+      "rot_conservacion: media de draws = 67.3 vs serie = 35.9 (dif. 87%)",
+      "rot_rentabilidad: media de draws = 113.6 vs serie = 65.8 (dif. 73%)",
+      "Δ rot_actual-rot_conservacion: draws = 67.8 vs serie = 39.8: definiciones/periodos distintos",
+      "Δ rot_actual-rot_rentabilidad: draws = 21.5 vs serie = 10.0: definiciones/periodos distintos"
+    ]
+  },
+  "e3_audit_status": {
+    "estado": "PROVISIONAL_PENDIENTE_RUSLE_REAL",
+    "archivos_en_drive": [
+      "Copia de crops_catalog_crudo.json",
+      "rotations.json",
+      "soil_agronomy.py",
+      "soil_agronomy_annual_1981_2025.gsheet",
+      "soil_agronomy_quantiles.json"
+    ],
+    "avisos_validador": []
+  },
+  "cdl_empirico": {
+    "f_alternancia_perfecta_px": 0.9778,
+    "p_error_px": 0.0222,
+    "n_campos_efectivos": 3,
+    "clopper_pearson_95_campos": [
+      0.0,
+      0.7076
+    ],
+    "anios_cdl": 10
+  },
+  "timestamp_utc": "2026-11-15T17:42:37.570703+00:00",
+  "seed": 42,
+  "python": "3.13.18",
+  "numpy": "2.4.6",
+  "pandas": "2.2.3",
+  "inputs_sha256": {
+    "core_xai_uncertainty": "e2bfaf325a3c1b6de09bf77385ede7c50168720902b11d1f933e5d0a4ce6eaa1",
+    "math_grid_30m": "dfab22c235b24732ce4a03e27661900016d7640602cd535289e0506cacec81de",
+    "math_metadata": "c561c7bb75bfedf115e75ca07ea098f183fa10f9399eeb5aefa00cea8117bf44",
+    "est1_validation": "83f616c0a89004067eaa08e50c4c57a811ddaa935d39e6ce09524361d872c3ae",
+    "est1_metrics_pheno": "1ab6044c421c58df1f2b4ef621c41acbe4a7d6bfc233d55a6aa05e299a2dc456",
+    "est1_bare_windows": "285b52608c77d320aec7bd59bbf49717f35d8ce8735cd0f81b7a62fa6aa2be47",
+    "est2_long_metrics": "5504d5a9b49464f77edc0566d38ce10baab8983aa162604efb4c63ef8013ccad",
+    "est2_summary": "8f00e5eb990c11b05eeb524394053911e13760f93960571abda2c7610884335a",
+    "est2_draws_npz": "90433dd1109ccb33f9fa7251d379dd037b2b85a02acb645082e7822b5c413afc",
+    "verif_soil": "75bf3cb0345c8f17d70497c72675363dc6220db4fc547a1efa27a4a272b157ec",
+    "verif_hls": "c1094bd76af691e9255b8eec45673b7824c2cebd77afb5817abf8d9339326b94",
+    "verif_aligned": "2479ab019c8d5b6f4840fb6d46dedd9500a9eb3c9d55daaab1354441ed382769",
+    "verif_climate_long": "d30e18a5c6837c22abcf2a6a5fd646ae63798a339e82085fd9dbbf2dcb4db7de"
+  }
+}
