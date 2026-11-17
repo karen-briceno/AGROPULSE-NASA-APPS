@@ -4,6 +4,7 @@ AgroPulse — Precision Agronomy & Satellite Decision Platform
 Story County, Ames, Iowa • NASA Space Apps Challenge
 
 Full Functional Core + Production SaaS Visual Layer (Bilingual: English & Spanish)
+Theme system: Dark / Light (switchable from the sidebar)
 """
 
 from __future__ import annotations
@@ -219,6 +220,8 @@ st.set_page_config(
 
 if "ui_lang" not in st.session_state:
     st.session_state["ui_lang"] = "es"
+if "ui_theme" not in st.session_state:
+    st.session_state["ui_theme"] = "dark"
 
 
 def t(key: str, **kwargs) -> str:
@@ -227,107 +230,243 @@ def t(key: str, **kwargs) -> str:
     return text.format(**kwargs) if kwargs else text
 
 
-render_html(
-    """
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
-<style>
+# ─────────────────────────────────────────────────────────────────────────────
+# THEME PALETTES (Dark / Light) — every themed color lives in a CSS variable
+# ─────────────────────────────────────────────────────────────────────────────
+
+THEMES = {
+    "dark": {
+        "scheme": "dark",
+        "css": {
+            "bg-app": (
+                "radial-gradient(circle at 15% 0%, rgba(16, 185, 129, 0.12) 0%, transparent 42%), "
+                "radial-gradient(circle at 88% 12%, rgba(245, 158, 11, 0.08) 0%, transparent 38%), "
+                "linear-gradient(180deg, #08100D 0%, #0D1814 55%, #111916 100%)"
+            ),
+            "sidebar-bg": "linear-gradient(180deg, #0D1613 0%, #0A120F 100%)",
+            "surface": "rgba(17, 28, 24, 0.92)",
+            "border-subtle": "rgba(148, 163, 184, 0.16)",
+            "border-accent": "rgba(52, 211, 153, 0.35)",
+            "text": "#F8FAFC",
+            "text-body": "#CBD5E1",
+            "text-muted": "#94A3B8",
+            "accent-text": "#6EE7B7",
+            "input-bg": "#16221D",
+            "input-border": "rgba(52, 211, 153, 0.45)",
+            "input-text": "#FFFFFF",
+            "btn-bg": "rgba(23, 38, 32, 0.92)",
+            "btn-bg-hover": "#1B332A",
+            "btn-text": "#F8FAFC",
+            "btn-border": "rgba(148, 163, 184, 0.24)",
+            "tab-bg": "rgba(17, 28, 24, 0.92)",
+            "tab-text": "#94A3B8",
+            "topbar-bg": "linear-gradient(120deg, rgba(16, 37, 29, 0.96) 0%, rgba(19, 32, 27, 0.96) 60%, rgba(32, 26, 19, 0.96) 100%)",
+            "topbar-title": "#FFFFFF",
+            "topbar-sub": "#94A3B8",
+            "badge-bg": "rgba(245, 158, 11, 0.14)",
+            "badge-text": "#FCD34D",
+            "badge-border": "rgba(245, 158, 11, 0.45)",
+            "shadow": "0 8px 24px rgba(0, 0, 0, 0.28)",
+            "pill-bg": "rgba(16, 185, 129, 0.16)",
+            "pill-text": "#6EE7B7",
+            "alert-bg": "rgba(30, 46, 39, 0.92)",
+            "code-bg": "rgba(148, 163, 184, 0.16)",
+            "code-text": "#A7F3D0",
+            "card-border": "#E2E8F0",
+            "card-shadow": "0 10px 28px rgba(0, 0, 0, 0.26)",
+            "card-gold-shadow": "0 0 0 3px rgba(245, 158, 11, 0.18), 0 14px 32px rgba(0, 0, 0, 0.30)",
+            "legend-text": "#E2E8F0",
+        },
+        "plot": {"paper": "rgba(17, 28, 24, 0.92)", "text": "#E2E8F0", "accent": "#34D399", "sep": "#111C18"},
+    },
+    "light": {
+        "scheme": "light",
+        "css": {
+            "bg-app": (
+                "radial-gradient(circle at 15% 0%, rgba(16, 185, 129, 0.10) 0%, transparent 42%), "
+                "radial-gradient(circle at 88% 12%, rgba(245, 158, 11, 0.08) 0%, transparent 38%), "
+                "linear-gradient(180deg, #F5F9F6 0%, #EEF4F0 55%, #E8F0EA 100%)"
+            ),
+            "sidebar-bg": "linear-gradient(180deg, #FFFFFF 0%, #F1F6F3 100%)",
+            "surface": "#FFFFFF",
+            "border-subtle": "rgba(15, 23, 42, 0.12)",
+            "border-accent": "rgba(5, 150, 105, 0.40)",
+            "text": "#0F172A",
+            "text-body": "#334155",
+            "text-muted": "#64748B",
+            "accent-text": "#047857",
+            "input-bg": "#FFFFFF",
+            "input-border": "rgba(5, 150, 105, 0.50)",
+            "input-text": "#0F172A",
+            "btn-bg": "#FFFFFF",
+            "btn-bg-hover": "#ECFDF5",
+            "btn-text": "#0F172A",
+            "btn-border": "rgba(15, 23, 42, 0.18)",
+            "tab-bg": "#FFFFFF",
+            "tab-text": "#475569",
+            "topbar-bg": "linear-gradient(120deg, #ECFDF5 0%, #F8FBF9 60%, #FFF6E5 100%)",
+            "topbar-title": "#0F172A",
+            "topbar-sub": "#475569",
+            "badge-bg": "rgba(245, 158, 11, 0.16)",
+            "badge-text": "#92400E",
+            "badge-border": "rgba(217, 119, 6, 0.55)",
+            "shadow": "0 8px 22px rgba(15, 23, 42, 0.08)",
+            "pill-bg": "rgba(5, 150, 105, 0.12)",
+            "pill-text": "#047857",
+            "alert-bg": "#F1F5F9",
+            "code-bg": "rgba(15, 23, 42, 0.07)",
+            "code-text": "#065F46",
+            "card-border": "#E2E8F0",
+            "card-shadow": "0 6px 18px rgba(15, 23, 42, 0.08)",
+            "card-gold-shadow": "0 0 0 3px rgba(245, 158, 11, 0.20), 0 10px 26px rgba(15, 23, 42, 0.12)",
+            "legend-text": "#1E293B",
+        },
+        "plot": {"paper": "#FFFFFF", "text": "#1E293B", "accent": "#059669", "sep": "#FFFFFF"},
+    },
+}
+
+cur_theme = st.session_state["ui_theme"] if st.session_state["ui_theme"] in THEMES else "dark"
+PLOT = THEMES[cur_theme]["plot"]
+_root_css = (
+    ":root{color-scheme:" + THEMES[cur_theme]["scheme"] + ";"
+    + "".join(f"--{k}:{v};" for k, v in THEMES[cur_theme]["css"].items())
+    + "}"
+)
+
+STATIC_CSS = """
 :root {
-    --bg-canvas: #09110E;
-    --bg-surface: #111C18;
-    --border-subtle: rgba(148, 163, 184, 0.16);
-    --border-accent: rgba(52, 211, 153, 0.35);
     --emerald-500: #10B981;
     --emerald-600: #059669;
     --amber-500: #F59E0B;
     --card-light: #FFFFFF;
     --ink-primary: #0F172A;
 }
-
 header[data-testid="stHeader"] { background: transparent !important; height: 0px !important; }
 #MainMenu, footer, div[data-testid="stToolbar"], div[data-testid="stDecoration"] { display: none !important; }
-
 html, body, [class*="css"] {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
-
 .stApp {
-    background:
-        radial-gradient(circle at 15% 0%, rgba(16, 185, 129, 0.12) 0%, transparent 42%),
-        radial-gradient(circle at 88% 12%, rgba(245, 158, 11, 0.08) 0%, transparent 38%),
-        linear-gradient(180deg, #08100D 0%, #0D1814 55%, #111916 100%) fixed !important;
-    color: #F8FAFC !important;
+    background: var(--bg-app) !important;
+    background-attachment: fixed !important;
+    color: var(--text) !important;
 }
-
+[data-testid="stAppViewContainer"], [data-testid="stMain"], .main { background: transparent !important; }
 .block-container {
     padding-top: 1.15rem !important;
     padding-bottom: 2.0rem !important;
     max-width: 1440px !important;
 }
-
 section[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #0D1613 0%, #0A120F 100%) !important;
+    background: var(--sidebar-bg) !important;
     border-right: 1px solid var(--border-subtle) !important;
 }
 section[data-testid="stSidebar"] h1, section[data-testid="stSidebar"] h2, section[data-testid="stSidebar"] h3,
-section[data-testid="stSidebar"] p, section[data-testid="stSidebar"] span, section[data-testid="stSidebar"] label,
-section[data-testid="stSidebar"] div {
-    color: #F1F5F9 !important;
+section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
+section[data-testid="stSidebar"] label p {
+    color: var(--text) !important;
 }
-
-.stMarkdown p, .stMarkdown li, .stCaption, label[data-testid="stWidgetLabel"] p {
-    color: #CBD5E1 !important;
+[data-testid="stSidebarCollapseButton"] svg, [data-testid="stExpandSidebarButton"] svg,
+[data-testid="collapsedControl"] svg { color: var(--text) !important; fill: currentColor; }
+[data-testid="stMarkdownContainer"] p, [data-testid="stMarkdownContainer"] li,
+label[data-testid="stWidgetLabel"] p {
+    color: var(--text-body) !important;
 }
-
-div[data-baseweb="input"] {
-    background-color: #16221D !important;
-    border: 1px solid rgba(52, 211, 153, 0.45) !important;
+[data-testid="stMarkdownContainer"] h1, [data-testid="stMarkdownContainer"] h2,
+[data-testid="stMarkdownContainer"] h3, [data-testid="stMarkdownContainer"] h4,
+[data-testid="stMarkdownContainer"] strong {
+    color: var(--text) !important;
+}
+[data-testid="stMarkdownContainer"] a { color: var(--accent-text) !important; }
+[data-testid="stMarkdownContainer"] hr { border-color: var(--border-subtle) !important; background: var(--border-subtle) !important; }
+[data-testid="stMarkdownContainer"] code {
+    background: var(--code-bg) !important;
+    color: var(--code-text) !important;
+}
+.stCaption, [data-testid="stCaptionContainer"], [data-testid="stCaptionContainer"] * { color: var(--text-muted) !important; }
+div[role="radiogroup"] label p, div[role="radiogroup"] label div { color: var(--text-body) !important; }
+div[data-baseweb="input"], div[data-baseweb="base-input"] {
+    background-color: var(--input-bg) !important;
     border-radius: 10px !important;
 }
+div[data-baseweb="input"] { border: 1px solid var(--input-border) !important; }
 div[data-baseweb="input"] input {
-    color: #FFFFFF !important;
-    -webkit-text-fill-color: #FFFFFF !important;
+    color: var(--input-text) !important;
+    -webkit-text-fill-color: var(--input-text) !important;
     font-weight: 700 !important;
     font-size: 0.98rem !important;
 }
 div[data-baseweb="input"] button {
-    background-color: #1E2E27 !important;
-    color: #E2E8F0 !important;
+    background-color: var(--btn-bg-hover) !important;
+    color: var(--text) !important;
     border-left: 1px solid var(--border-subtle) !important;
 }
-
+div[data-baseweb="input"] button svg { fill: var(--text) !important; color: var(--text) !important; }
+div[data-baseweb="textarea"], div[data-baseweb="textarea"] textarea {
+    background-color: var(--input-bg) !important;
+    color: var(--input-text) !important;
+    -webkit-text-fill-color: var(--input-text) !important;
+    border-radius: 10px !important;
+}
+div[data-baseweb="textarea"] { border: 1px solid var(--input-border) !important; }
+[data-testid="stSlider"] label p,
+[data-testid="stTickBarMin"], [data-testid="stTickBarMax"],
+[data-testid="stThumbValue"], [data-testid="stSliderThumbValue"] {
+    color: var(--text) !important;
+}
+[data-testid="stExpander"] details {
+    background: var(--surface) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: 12px !important;
+}
+[data-testid="stExpander"] summary, [data-testid="stExpander"] summary p, [data-testid="stExpander"] summary span {
+    color: var(--text) !important;
+    font-weight: 600 !important;
+}
+[data-testid="stExpander"] summary svg { color: var(--text) !important; fill: var(--text) !important; }
+div[data-testid="stAlert"] {
+    background: var(--alert-bg) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: 12px !important;
+}
+div[data-testid="stAlert"] *, div[data-testid="stAlert"] p { color: var(--text) !important; }
+div[data-testid="stAlert"] code { background: var(--code-bg) !important; color: var(--code-text) !important; }
 .stButton > button {
     border-radius: 10px !important;
     font-weight: 600 !important;
     font-size: 0.82rem !important;
     padding: 0.45rem 0.60rem !important;
-    border: 1px solid rgba(148, 163, 184, 0.24) !important;
-    background: rgba(23, 38, 32, 0.92) !important;
-    color: #F8FAFC !important;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.22) !important;
+    border: 1px solid var(--btn-border) !important;
+    background: var(--btn-bg) !important;
+    color: var(--btn-text) !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12) !important;
     transition: all 0.16s ease !important;
     white-space: nowrap !important;
 }
-.stButton > button p, .stButton > button span { color: #F8FAFC !important; }
+.stButton > button p, .stButton > button span { color: var(--btn-text) !important; }
 .stButton > button:hover {
     border-color: #34D399 !important;
-    background: #1B332A !important;
+    background: var(--btn-bg-hover) !important;
     transform: translateY(-1px);
 }
-.stButton > button[kind="primary"] {
+.stButton > button[kind="primary"], .stButton > button[data-testid="stBaseButton-primary"] {
     background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
     border: 1px solid rgba(167, 243, 208, 0.6) !important;
     color: #FFFFFF !important;
     box-shadow: 0 4px 14px rgba(16, 185, 129, 0.30) !important;
 }
-
+.stButton > button[kind="primary"] p, .stButton > button[kind="primary"] span,
+.stButton > button[data-testid="stBaseButton-primary"] p, .stButton > button[data-testid="stBaseButton-primary"] span {
+    color: #FFFFFF !important;
+}
 .stTabs [data-baseweb="tab-list"] {
     gap: 6px;
-    background: rgba(17, 28, 24, 0.92) !important;
+    background: var(--tab-bg) !important;
     padding: 6px;
     border-radius: 14px;
     border: 1px solid var(--border-subtle);
     margin-bottom: 14px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+    box-shadow: var(--shadow);
 }
 .stTabs [data-baseweb="tab"] {
     height: 40px;
@@ -337,7 +476,7 @@ div[data-baseweb="input"] button {
     border: 1px solid transparent !important;
 }
 .stTabs [data-baseweb="tab"] p {
-    color: #94A3B8 !important;
+    color: var(--tab-text) !important;
     font-weight: 600 !important;
     font-size: 0.88rem !important;
 }
@@ -351,9 +490,8 @@ div[data-baseweb="input"] button {
     font-weight: 700 !important;
 }
 .stTabs [data-baseweb="tab-highlight"], .stTabs [data-baseweb="tab-border"] { display: none !important; }
-
 .saas-topbar {
-    background: linear-gradient(120deg, rgba(16, 37, 29, 0.96) 0%, rgba(19, 32, 27, 0.96) 60%, rgba(32, 26, 19, 0.96) 100%);
+    background: var(--topbar-bg);
     border: 1px solid var(--border-accent);
     border-radius: 16px;
     padding: 0.90rem 1.35rem;
@@ -362,56 +500,69 @@ div[data-baseweb="input"] button {
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.32);
+    box-shadow: var(--shadow);
 }
 .header-left { display: flex; align-items: center; gap: 14px; }
-.header-title {
+.saas-topbar .header-title {
     font-family: 'Plus Jakarta Sans', sans-serif !important;
-    color: #FFFFFF !important;
+    color: var(--topbar-title) !important;
     font-size: 1.40rem;
     font-weight: 800;
     margin: 0;
     letter-spacing: -0.02em;
     line-height: 1.2;
+    white-space: nowrap;
 }
-.header-subtitle { color: #94A3B8 !important; font-size: 0.81rem; margin: 2px 0 0 0; font-weight: 500; }
+.saas-topbar .header-title a, .saas-topbar [data-testid="stHeaderActionElements"] { display: none !important; }
+@media (max-width: 900px) { .saas-topbar .header-title { white-space: normal; } }
+.saas-topbar .header-subtitle { color: var(--topbar-sub) !important; font-size: 0.81rem; margin: 2px 0 0 0; font-weight: 500; }
 .topbar-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
 .badge-capsule {
-    background: rgba(245, 158, 11, 0.14);
-    color: #FCD34D !important;
-    border: 1px solid rgba(245, 158, 11, 0.45);
+    background: var(--badge-bg);
+    color: var(--badge-text) !important;
+    border: 1px solid var(--badge-border);
     border-radius: 99px;
     padding: 4px 12px;
     font-size: 0.74rem;
     font-weight: 700;
     white-space: nowrap;
 }
-.topbar-meta { font-size: 0.73rem; color: #94A3B8 !important; font-weight: 500; }
-
+.topbar-meta { font-size: 0.73rem; color: var(--text-muted) !important; font-weight: 500; }
 div[style*="rgba(255,255,255,0.08)"], div[style*="rgba(26, 52, 39"] {
-    background: rgba(17, 28, 24, 0.88) !important;
+    background: var(--surface) !important;
     border: 1px solid var(--border-subtle) !important;
     border-radius: 14px !important;
-    color: #F8FAFC !important;
+    color: var(--text) !important;
 }
-div[style*="rgba(255,255,255,0.08)"] * { color: #F8FAFC !important; }
-
+div[style*="rgba(255,255,255,0.08)"] *, div[style*="rgba(26, 52, 39"] * { color: var(--text) !important; }
+.sel-card {
+    background: linear-gradient(135deg, #065F46 0%, #064E3B 100%);
+    border: 1px solid rgba(110, 231, 183, 0.45);
+    border-radius: 14px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+section[data-testid="stSidebar"] .sel-card .sel-lbl { font-size: 0.68rem; text-transform: uppercase; color: #A7F3D0 !important; font-weight: 700; letter-spacing: 0.6px; }
+section[data-testid="stSidebar"] .sel-card .sel-title { font-size: 1.28rem; font-weight: 800; color: #FFFFFF !important; margin: 2px 0; }
+section[data-testid="stSidebar"] .sel-card .sel-of { font-size: 0.80rem; font-weight: 500; color: #D1FAE5 !important; }
+section[data-testid="stSidebar"] .sel-card .sel-sub { font-size: 0.80rem; color: #ECFDF5 !important; font-weight: 500; }
 .agri-card {
     background: var(--card-light);
-    border: 1px solid #E2E8F0;
+    border: 1px solid var(--card-border);
     border-radius: 16px;
     padding: 1.10rem 1.25rem;
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.26);
+    box-shadow: var(--card-shadow);
     margin-bottom: 0.85rem;
     color: var(--ink-primary) !important;
 }
-.agri-card p, .agri-card li, .agri-card ul, .agri-card span, .agri-card b { color: #0F172A !important; }
+.agri-card p, .agri-card li, .agri-card ul, .agri-card strong { color: #0F172A !important; }
 .agri-card.best-gold {
     border: 2px solid #F59E0B !important;
     background: linear-gradient(180deg, #FFFDF5 0%, #FFFFFF 28%) !important;
-    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18), 0 14px 32px rgba(0, 0, 0, 0.30) !important;
+    box-shadow: var(--card-gold-shadow) !important;
 }
-.gold-badge {
+.agri-card .gold-badge, .gold-badge {
     display: inline-block;
     background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
     color: #FFFFFF !important;
@@ -421,9 +572,8 @@ div[style*="rgba(255,255,255,0.08)"] * { color: #F8FAFC !important; }
     font-size: 0.71rem;
     white-space: nowrap;
 }
-
 .dark-widget-box {
-    background: rgba(17, 28, 24, 0.92);
+    background: var(--surface);
     border: 1px solid var(--border-subtle);
     border-radius: 14px;
     padding: 10px 14px 6px 14px;
@@ -433,33 +583,48 @@ div[style*="rgba(255,255,255,0.08)"] * { color: #F8FAFC !important; }
     font-family: 'Plus Jakarta Sans', sans-serif;
     font-size: 0.82rem;
     font-weight: 700;
-    color: #E2E8F0;
+    color: var(--text);
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-
+.legend-strip {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    padding: 7px 10px;
+    margin: 6px 0;
+    font-size: 0.78rem;
+    color: var(--legend-text);
+    font-weight: 600;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.legend-strip i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
 .why-box {
     padding: 10px 14px;
     border-radius: 12px;
-    background: rgba(17, 28, 24, 0.90);
+    background: var(--surface);
     border: 1px solid var(--border-subtle);
     margin-top: 8px;
     font-size: 0.82rem;
-    color: #CBD5E1 !important;
 }
+.why-box, .why-box * { color: var(--text-body) !important; }
+.why-box b, .why-box strong { color: var(--text) !important; }
 .source-pill {
     display: inline-block;
     font-size: 0.70rem;
     font-weight: 600;
     padding: 2px 9px;
     border-radius: 99px;
-    background: rgba(16, 185, 129, 0.16);
-    color: #6EE7B7 !important;
-    border: 1px solid rgba(52, 211, 153, 0.4);
+    background: var(--pill-bg);
+    color: var(--pill-text) !important;
+    border: 1px solid var(--border-accent);
     margin-left: 6px;
 }
-
 .verdict-title {
     font-family: 'Plus Jakarta Sans', sans-serif !important;
     font-size: 1.20rem;
@@ -478,7 +643,6 @@ div[style*="rgba(255,255,255,0.08)"] * { color: #F8FAFC !important; }
 .check-row span { color: #475569 !important; font-weight: 500; }
 .check-row b { color: #0F172A !important; font-weight: 700; text-align: right; }
 .check-row:last-child { border-bottom: none; }
-
 .tl-grid-2x2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -495,7 +659,6 @@ div[style*="rgba(255,255,255,0.08)"] * { color: #F8FAFC !important; }
 .yr-lbl { font-size: 0.66rem; color: #64748B !important; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
 .yr-emoji { font-size: 1.15rem; line-height: 1; }
 .yr-name { font-size: 0.82rem; color: #0F172A !important; font-weight: 700; margin-top: 2px; }
-
 .cal-grid {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
@@ -515,7 +678,6 @@ div[style*="rgba(255,255,255,0.08)"] * { color: #F8FAFC !important; }
 .cal-cell.bare { background: #FEF2F2; border-color: #FCA5A5; color: #991B1B !important; }
 .cal-cell.cover { background: #ECFDF5; border-color: #6EE7B7; color: #065F46 !important; }
 .cal-cell i { display: block; font-style: normal; font-size: 1.1rem; margin-bottom: 2px; }
-
 .grid-100 {
     display: grid;
     grid-template-columns: repeat(10, 18px);
@@ -526,8 +688,16 @@ div[style*="rgba(255,255,255,0.08)"] * { color: #F8FAFC !important; }
 .dot-other { width: 18px; height: 18px; background: rgba(245, 158, 11, 0.25); border: 1px solid rgba(245, 158, 11, 0.55); border-radius: 4px; }
 .stress-block-red { display: inline-block; width: 22px; height: 22px; background: #EF4444; border-radius: 5px; margin-right: 4px; }
 .stress-block-gray { display: inline-block; width: 22px; height: 22px; background: #E2E8F0; border-radius: 5px; margin-right: 4px; }
-</style>
+.audit-wrap { overflow-x: auto; margin: 6px 0 10px 0; }
+.audit-wrap table { width: 100%; border-collapse: collapse; font-size: 0.80rem; background: var(--surface); border: 1px solid var(--border-subtle); border-radius: 10px; }
+.audit-wrap th, .audit-wrap td { padding: 7px 10px; border-bottom: 1px solid var(--border-subtle); text-align: right; color: var(--text) !important; }
+.audit-wrap thead th { color: var(--text-muted) !important; font-weight: 700; font-size: 0.72rem; }
+.audit-wrap tbody th { text-align: left; font-weight: 700; }
 """
+
+render_html(
+    '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">'
+    "<style>" + _root_css + STATIC_CSS + "</style>"
 )
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -603,7 +773,7 @@ def _jump_to_pid(target_pid: str) -> None:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# SIDEBAR — LANGUAGE SWITCHER & PLOT EXPLORER
+# SIDEBAR — LANGUAGE + THEME SWITCHER & PLOT EXPLORER
 # ─────────────────────────────────────────────────────────────────────────────
 
 st.session_state["plot_number_widget"] = int(st.session_state["active_plot_num"])
@@ -629,6 +799,28 @@ with st.sidebar:
             st.session_state["ui_lang"] = "es"
             st.rerun()
 
+    is_es_sb = st.session_state["ui_lang"] == "es"
+    st.caption("🎨 Tema de la app" if is_es_sb else "🎨 App theme")
+    theme_c1, theme_c2 = st.columns(2, gap="small")
+    with theme_c1:
+        if st.button(
+            "🌙 Oscuro" if is_es_sb else "🌙 Dark",
+            use_container_width=True,
+            type="primary" if cur_theme == "dark" else "secondary",
+            key="btn_theme_dark",
+        ):
+            st.session_state["ui_theme"] = "dark"
+            st.rerun()
+    with theme_c2:
+        if st.button(
+            "☀️ Claro" if is_es_sb else "☀️ Light",
+            use_container_width=True,
+            type="primary" if cur_theme == "light" else "secondary",
+            key="btn_theme_light",
+        ):
+            st.session_state["ui_theme"] = "light"
+            st.rerun()
+
     st.markdown("---")
     st.markdown(t("sb_title"))
     st.caption(t("sb_caption"))
@@ -641,10 +833,10 @@ with st.sidebar:
 
     render_html(
         f"""
-<div style="background: linear-gradient(135deg, #065F46 0%, #064E3B 100%); border: 1px solid rgba(110, 231, 183, 0.45); border-radius: 14px; padding: 12px 14px; margin-bottom: 10px; box-shadow: 0 6px 16px rgba(0,0,0,0.25);">
-<div style="font-size: 0.68rem; text-transform: uppercase; color: #A7F3D0; font-weight: 700; letter-spacing: 0.6px;">{t("sb_selected")}</div>
-<div style="font-size: 1.28rem; font-weight: 800; color: #FFFFFF; margin: 2px 0;">📍 {t("sb_field_lbl")} #{active_num} <span style="font-size:0.80rem; font-weight:500; color:#D1FAE5;">{t("sb_of_360")}</span></div>
-<div style="font-size: 0.80rem; color: #ECFDF5; font-weight: 500;">🧭 {sector_str} • ⛰️ {slope_desc}</div>
+<div class="sel-card">
+<div class="sel-lbl">{t("sb_selected")}</div>
+<div class="sel-title">📍 {t("sb_field_lbl")} #{active_num} <span class="sel-of">{t("sb_of_360")}</span></div>
+<div class="sel-sub">🧭 {sector_str} • ⛰️ {slope_desc}</div>
 </div>
 """
     )
@@ -713,7 +905,7 @@ with st.sidebar:
     if banner_uri:
         render_html(
             f"""
-<div style="border-radius:12px; overflow:hidden; border:1px solid rgba(148,163,184,0.22); margin-top:4px;">
+<div style="border-radius:12px; overflow:hidden; border:1px solid var(--border-subtle); margin-top:4px;">
 <img src="{banner_uri}" alt="NASA Space Apps Challenge" style="width:100%; display:block;" />
 </div>
 """
@@ -966,16 +1158,16 @@ with tab1:
                             st.session_state["last_map_clicked_pid"] = clicked_pid
                             st.session_state["active_plot_num"] = pixel_ids.index(clicked_pid) + 1
                             st.rerun()
-                            
+
         is_es_t1 = cur_lang == "es"
         render_html(
             f"""
-            <div style="display:flex; justify-content:space-around; align-items:center; background:rgba(17,28,24,0.92); border:1px solid rgba(148,163,184,0.18); border-radius:10px; padding:7px 10px; margin:6px 0; font-size:0.78rem; color:#E2E8F0; font-weight:600;">
-            <span><i style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#22C55E;margin-right:6px;"></i>{'Zona óptima y húmeda' if is_es_t1 else 'Healthy moist zone'}</span>
-            <span><i style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#FACC15;margin-right:6px;"></i>{'Atención moderada' if is_es_t1 else 'Moderate watch'}</span>
-            <span><i style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#EF4444;margin-right:6px;"></i>{'Ladera sensible a sequía/erosión' if is_es_t1 else 'Drought/runoff sensitive'}</span>
-            </div>
-            """
+<div class="legend-strip">
+<span><i style="background:#22C55E;"></i>{'Zona óptima y húmeda' if is_es_t1 else 'Healthy moist zone'}</span>
+<span><i style="background:#FACC15;"></i>{'Atención moderada' if is_es_t1 else 'Moderate watch'}</span>
+<span><i style="background:#EF4444;"></i>{'Ladera sensible a sequía/erosión' if is_es_t1 else 'Drought/runoff sensitive'}</span>
+</div>
+"""
         )
 
         render_html(f'<div class="why-box">{t("t1_why_html")}</div>')
@@ -1015,7 +1207,7 @@ with tab1:
 <div class="dark-widget-box">
 <div class="widget-header">
 <span>🧪 {t("t1_donut_title")}</span>
-<span style="font-size:0.72rem; color:#6EE7B7;">0–100 cm</span>
+<span style="font-size:0.72rem; color:var(--accent-text);">0–100 cm</span>
 </div>
 </div>
 """
@@ -1025,22 +1217,25 @@ with tab1:
             labels=[t("t1_sand"), t("t1_silt"), t("t1_clay")],
             values=[sand, silt, clay],
             hole=0.62,
-            marker=dict(colors=["#F59E0B", "#94A3B8", "#92400E"], line=dict(color="#111C18", width=2)),
+            marker=dict(colors=["#F59E0B", "#94A3B8", "#92400E"], line=dict(color=PLOT["sep"], width=2)),
             textinfo="label+percent",
-            textfont=dict(size=11, color="#F8FAFC"),
+            insidetextfont=dict(size=11, color="#FFFFFF"),
+            outsidetextfont=dict(size=11, color=PLOT["text"]),
+            textfont=dict(size=11, color=PLOT["text"]),
             insidetextorientation="horizontal",
         ))
         fig_soil_donut.update_layout(
             height=190,
             margin=dict(l=8, r=8, t=6, b=6),
             showlegend=False,
-            paper_bgcolor="rgba(17, 28, 24, 0.92)",
-            plot_bgcolor="rgba(17, 28, 24, 0.92)",
+            paper_bgcolor=PLOT["paper"],
+            plot_bgcolor=PLOT["paper"],
+            font=dict(color=PLOT["text"]),
             annotations=[
                 dict(
-                    text=f"<b style='color:#F8FAFC; font-size:12px;'>{t('t1_om_center')}<br><span style='color:#34D399; font-size:14px;'>{om_val:.1f}%</span></b>",
+                    text=f"<b>{t('t1_om_center')}</b><br><span style='color:{PLOT['accent']}; font-size:14px;'><b>{om_val:.1f}%</b></span>",
                     x=0.5, y=0.5,
-                    font=dict(size=11, color="#F8FAFC"),
+                    font=dict(size=12, color=PLOT["text"]),
                     showarrow=False,
                 )
             ],
@@ -1053,7 +1248,7 @@ with tab1:
 <div class="dark-widget-box" style="margin-top:6px;">
 <div class="widget-header">
 <span>{hist_title_clean}</span>
-<span style="font-size:0.70rem; color:#94A3B8;">USDA CDL 30m</span>
+<span style="font-size:0.70rem; color:var(--text-muted);">USDA CDL 30m</span>
 </div>
 </div>
 """
@@ -1086,11 +1281,12 @@ with tab1:
         fig_hist.update_layout(
             height=82,
             margin=dict(l=4, r=4, t=4, b=18),
-            xaxis=dict(tickfont=dict(size=10, color="#E2E8F0"), dtick=1),
+            xaxis=dict(tickfont=dict(size=10, color=PLOT["text"]), dtick=1),
             yaxis=dict(visible=False),
             showlegend=False,
-            paper_bgcolor="rgba(17, 28, 24, 0.92)",
-            plot_bgcolor="rgba(17, 28, 24, 0.92)",
+            paper_bgcolor=PLOT["paper"],
+            plot_bgcolor=PLOT["paper"],
+            font=dict(color=PLOT["text"]),
         )
         st.plotly_chart(fig_hist, use_container_width=True, config={"displayModeBar": False})
 
@@ -1565,7 +1761,7 @@ with tab3:
 <div class="dark-widget-box" style="margin-top:10px; padding:12px 16px;">
     <div class="widget-header">
         <span>🛰️ {'Vista Satelital Predictiva: Cómo lucirá tu campo (Hoy → 10 Años)' if is_es else 'Predictive Satellite View: How Your Field Will Look (Today → 10 Years)'}</span>
-        <span style="font-size:0.74rem; color:#6EE7B7;">{plan_short_name} • {adoption_pct}% {'aplicado' if is_es else 'applied'}</span>
+        <span style="font-size:0.74rem; color:var(--accent-text);">{plan_short_name} • {adoption_pct}% {'aplicado' if is_es else 'applied'}</span>
     </div>
 </div>
 """
@@ -1901,7 +2097,13 @@ with tab4:
                 index=[STRAT_SHORTS["rot_actual"], STRAT_SHORTS["rot_conservacion"], STRAT_SHORTS["rot_rentabilidad"]],
                 columns=[t("t4_aud_col1"), t("t4_aud_col2"), t("t4_aud_col3"), t("t4_aud_col4")],
             )
-            st.dataframe(raw_mat_df, use_container_width=True)
+            # Tabla HTML temática (legible en claro y oscuro; st.dataframe no sigue el tema de la app)
+            mat_html = raw_mat_df.to_html(
+                float_format=lambda v: f"{v:,.3f}",
+                border=0,
+                escape=True,
+            ).replace("\n", "")
+            render_html(f'<div class="audit-wrap">{mat_html}</div>')
             st.markdown(
                 f"- **Soil AWC (SSURGO):** `awc_l = {awc_l:.4f}`, `AWC = {awc_val:.4f}`, `awc_h = {awc_h:.4f}` cm/cm\n"
                 f"- **Combined SMAP Spatial Error:** $\\sigma_{{\\text{{combined}}}} = \\pm {sigma_comb:.4f}\\text{{ m}}^3/\\text{{m}}^3$"

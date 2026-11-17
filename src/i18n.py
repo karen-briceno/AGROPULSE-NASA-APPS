@@ -6,7 +6,7 @@ from __future__ import annotations
 
 TRANSLATIONS: dict[str, dict[str, str]] = {
     "en": {
-        "app_title": "AgroPulse — Your Farm From Space",
+        "app_title": "AgroPulse: Your Farm From Space",
         "app_subtitle": "Story County, Ames, Iowa • NASA Space Apps Challenge",
         "badge_farm": "🛰️ 80-Acre Field • 360 Sub-Plots",
         "badge_sources": "NASA Satellites + USDA Soil & Crop Maps",
@@ -167,7 +167,7 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "t4_aud_gap": "Uncertainty & Traceability Note:",
     },
     "es": {
-        "app_title": "AgroPulse — Tu Campo Desde el Espacio",
+        "app_title": "AgroPulse: Tu Campo Desde el Espacio",
         "app_subtitle": "Condado de Story, Ames, Iowa • NASA Space Apps Challenge",
         "badge_farm": "🛰️ Predio de 80 Acres • 360 Subparcelas",
         "badge_sources": "Satélites NASA + Mapas de Suelo y Cultivos USDA",
